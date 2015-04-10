@@ -22,7 +22,14 @@ run <- function(m,t,plotBool){
       break
     }
     if(plotBool == TRUE){
-      image(mn,main=i,col=c(0,1))
+      e10 <- matrix(nrow=x,ncol=y)
+      for(ei in c(1:x)){
+        for(ej in c(1:y)){
+          e10[ei,ej] <- vectorizePattern(m,ei,ej,6)    
+        }
+      }
+      image(e10,main=i)
+      image(mn,col=c("#00000000",1),add=TRUE)
     }
     m <- mn
   }
@@ -74,21 +81,16 @@ sumN <- function(m,i,j){
   sumR
 }
 
-x <- 100
-y <- 100
+x <- 20
+y <- 20
 m <- prepareGrid(x,y)
-m <- populateRandom(m,800)
+m <- populateRandom(m,10)
 image(m,col=c(0,1))
 m <- run(m,50,1)
 library(entropy)
-e10 <- matrix(nrow=x,ncol=y)
-for(i in c(1:x)){
-  for(j in c(1:y))
-    e10[i,j] <- vectorizePattern(m,i,j,20)    
-}
+
+nrow(e10)
 hist(e10)
-image(m)
-image(e10)
 
 vectorizePattern <- function(m,i,j,w){
   #calculate the entropy around point i,j with a window of size w
@@ -99,22 +101,28 @@ vectorizePattern <- function(m,i,j,w){
   s <- numeric(r*r)
   counter <- 1
   for(ci in c((i-r):(i+r))){
+    celli <- ci
+    if(ci < 1){
+      celli <- x + ci
+    }
     for(cj in c((j-r):(j+r))){
-      if(ci < 1){
-        ci <- x + ci
-      }
+      cellj <- cj
       if(cj < 1){
-        cj <- y + ci
+        cellj <- y + cj
       }
       if(ci > x){
-        ci <- ci - x
+        celli <- ci - x
       }
       if(cj > y){
-        cj <- cj - x
+        cellj <- cj - y
       }
-      s[counter] <- m[ci,cj]
+     # print(paste(celli,cellj,ci,cj,r))
+      s[counter] <- m[celli,cellj]
       counter <- counter+1
     }
   }
   entropy(s)
 }
+
+m[100,12]
+y
