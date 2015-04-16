@@ -1,15 +1,18 @@
-prepareGrid <- function(x,y){
+prepareGrid <- function(x,y){  # function that creates a matrix. Each cell of the matrix corresponds to a cell in the grid
   m <- matrix(0,nrow=x,ncol=y)
 }
 
-populateRandom <- function(m,r){
+populateRandom <- function(m,r){ # function that randomly makes some cells "alive"
   x <- nrow(m)
   y <- ncol(m)
   m[sample(x*y,r,replace=FALSE)] <- 1  
   m
 }
 
-run <- function(m,t,plotBool){
+run <- function(m,t,plotBool){ # function that iterates the game of life t steps and draws the plot at each step
+  a <- numeric(t)
+  b <- numeric(t)
+  d <- numeric(t)
   for(i in c(1:t)){
     mn <- step(m)
     if(sum(mn)==0){
@@ -21,22 +24,32 @@ run <- function(m,t,plotBool){
     if(all(mn == m)){
       break
     }
+    e <- calcEntropy(m,6)
+    b[i] <- mean(e,na.rm=TRUE)
+    a[i] <- entropy(c(m))
+    d[i] <- sum(m)
     if(plotBool == TRUE){
-      e10 <- matrix(nrow=x,ncol=y)
-      for(ei in c(1:x)){
-        for(ej in c(1:y)){
-          e10[ei,ej] <- vectorizePattern(m,ei,ej,6)    
-        }
-      }
-      image(e10,main=i)
+      image(e,main=i)
       image(mn,col=c("#00000000",1),add=TRUE)
     }
     m <- mn
   }
-  mn
+  list(mn,a,b,d)
 }
 
-step <- function(m){
+calcEntropy <- function(m,r){  # function taht calculate the local entropy around each cell taking into account r cells around it
+  x <- nrow(m)
+  y <- ncol(m)
+  e <- matrix(nrow=x,ncol=y)
+  for(ei in c(1:x)){
+    for(ej in c(1:y)){
+      e[ei,ej] <- vectorizePattern(m,ei,ej,r)    
+    }
+  }
+  e
+}
+
+step <- function(m){ # function that calculates the state of the simulation after one time step (which cells die etc)
   x <- nrow(m)
   y <- ncol(m)
   md <- matrix(nrow=nrow(m),ncol=ncol(m)) #copy table
@@ -56,7 +69,7 @@ step <- function(m){
   md
 }
 
-sumN <- function(m,i,j){
+sumN <- function(m,i,j){  # function that calculates the sum of cells surrounding cell i,j
   #calculate the sum of 9 cells surrounding (i,j)
   x <- nrow(m)
   y <- ncol(m)
@@ -81,16 +94,30 @@ sumN <- function(m,i,j){
   sumR
 }
 
-x <- 20
-y <- 20
-m <- prepareGrid(x,y)
-m <- populateRandom(m,10)
-image(m,col=c(0,1))
-m <- run(m,50,1)
-library(entropy)
 
-nrow(e10)
-hist(e10)
+
+# a simple run of the simulation
+library(entropy)
+x <- 50
+y <- 50
+m <- prepareGrid(x,y)
+m <- populateRandom(m,500)
+image(m,col=c(0,1))
+l <- run(m,50,1)
+#matplot(data.frame(l[[2]]/log(l[[4]]),l[[3]]),type="o",pch=19)
+#matplot(data.frame(l[[2]],l[[3]]),type="o",pch=19)
+#legend("topright",c("all","window"),col=c(1,2),lty=1,pch=19,bty="n")
+
+
+# entropy vs density
+ed <- numeric()
+for(i in seq(from=1,to=2500,by=10)){
+  m <- prepareGrid(x,y)
+  m <- populateRandom(m,i)
+  ed <- append(ed,entropy(c(m)))
+}
+
+
 
 vectorizePattern <- function(m,i,j,w){
   #calculate the entropy around point i,j with a window of size w
@@ -123,6 +150,3 @@ vectorizePattern <- function(m,i,j,w){
   }
   entropy(s)
 }
-
-m[100,12]
-y
