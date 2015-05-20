@@ -3,20 +3,18 @@
 #include "randomv.h"
 #include "gol.h"
 
-//g++ -Wall -o testing main.cpp gol.cpp  randomv.cpp -lgsl -lgslcblas
+//g++ -Wall -o testing main.cpp  gol.cpp randomv.cpp -lgsl -lgslcblas
 
 using namespace std;
 int main(int argc, char* argv[]){
-  int x = 30;
-  int y = 30;
-  gol torus(x,y);
+  int x = 50;
+  int y = 50;
+  gol sim(x,y);
   randomv r;
-  torus.prepare();
-  torus.printM();
-  torus.populateRandom(r,x*y/2);
-  torus.printM();
-  torus.step();
-  torus.printM();
+  sim.populateRandom(r,0.5*x*y);
+  sim.printV();
+  sim.run(1000,r,1);
+ // gol.printM();
 	       //prepare grid
   //#make a grid objsect
   return EXIT_SUCCESS;
