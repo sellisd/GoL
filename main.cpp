@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
+#include <vector>
+#include <map>
 #include "randomv.h"
 #include "gol.h"
 
@@ -8,28 +10,9 @@
 
 using namespace std;
 int main(int argc, char* argv[]){
-  vector<int> debug;
-  debug.push_back(1);
-  debug.push_back(2);
-  debug.push_back(2);
-  debug.push_back(3);
-  debug.push_back(3);
-  debug.push_back(3);
-  debug.push_back(4);
-  debug.push_back(4);
-  debug.push_back(4);
-  debug.push_back(4);
-  gol sim(5,5);
-  map<int,double> m;
-  sim.hist(m,debug);
-  for(map<int,double>::iterator it = m.begin(); it != m.end(); ++it){
-    cout<<(*it).first<<' '<<(*it).second<<endl;
-  }
-  cout<<endl<<sim.entropy(m)<<endl;
-  exit(0);
-  int x = 100;
-  int y = 100;
-  //  gol sim(x,y);
+  int x = 128;
+  int y = 128;
+  gol sim(x,y);
   ofstream wout;
   ofstream vout;
   wout.open ("window.dat", std::ofstream::out);
@@ -37,9 +20,10 @@ int main(int argc, char* argv[]){
   randomv r;
   //    sim.populateRandom(r,0.5*x*y);
   sim.populateRegion(r, 50, .5);
-  sim.printM();
+  //  map<int,double> Hk;
+  //  sim.pattern(Hk);
   //  sim.printV();
-  sim.run(1000,r,100,10,wout,vout);
+  sim.run(1000,r,1,wout,vout);
  // gol.printM();
 	       //prepare grid
   //#make a grid objsect

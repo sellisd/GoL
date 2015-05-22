@@ -28,11 +28,13 @@ class gol{
   void populateRegion(randomv & r, int a, double p);
   int sumN(int i, int j);
   void step(randomv &r, bool useRules);
-  void run(int T,randomv &r, bool useRules, int window, ostream & wout, ostream & vout);
+  void run(int T,randomv &r, bool useRules, ostream & wout, ostream & vout);
   double log2(double x);
   double entropy(map<int,double> & hist);
   double density(vector<int> & vectorS);
   void hist(map<int,double> &, vector<int> & vectorS);
+  void coarseGrain(vector<int> & coarseGrained, int window);
+  void pattern(map<int,double> & p);
  private:
   int x; //!< number of rows
   int y; //!< number of columns
