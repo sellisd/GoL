@@ -2,6 +2,7 @@
 #define GOL_H
 #include <vector>
 #include <fstream>
+#include <map>
 #include "randomv.h"
 using namespace std;
 /**
@@ -23,12 +24,15 @@ class gol{
   int get(int i, int j);
   vector< vector<int> > getM(void){ return m;}
   void setM(vector<vector<int> > a){ m = a;}
-  void populateRandom(randomv r, int a);
+  void populateRandom(randomv & r, int a);
+  void populateRegion(randomv & r, int a, double p);
   int sumN(int i, int j);
   void step(randomv &r, bool useRules);
   void run(int T,randomv &r, bool useRules, int window, ostream & wout, ostream & vout);
   double log2(double x);
-  double entropy(vector<int> & vectorS);
+  double entropy(map<int,double> & hist);
+  double density(vector<int> & vectorS);
+  void hist(map<int,double> &, vector<int> & vectorS);
  private:
   int x; //!< number of rows
   int y; //!< number of columns

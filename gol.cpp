@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <map>
 #include "gol.h"
 #include "randomv.h"
 using namespace std;
@@ -74,11 +75,12 @@ void gol::printV(ostream& vout){
       }else if (value == 0){
         vout<<dead;
       }else{
+	cerr<<"problem!";
         exit(1);
       }
     }
   }
-  cout<<endl;
+  vout<<endl;
 }
 
 void gol::vectorizeS(int window, ostream & wout){
@@ -98,19 +100,30 @@ void gol::vectorizeS(int window, ostream & wout){
 	  bitString.push_back(m.at(i+I).at(j+J));
 	}
       }
-      wout<<entropy(bitString);
+      //      wout<<entropy(bitString);
       windowId++;
       wout<<endl;
     }
   }
 }
 
-void gol::populateRandom(randomv r, int a){
+void gol::populateRandom(randomv & r, int a){
   // populate random (with resampling though)
   for(int i = 0; i<a; i++){
     int mutateX = r.sampleUniformInt(x);
     int mutateY = r.sampleUniformInt(y);
     this->set(mutateX,mutateY,1);
+  }
+}
+
+void gol::populateRegion(randomv & r, int side, double p){
+  //populate a block of size side with density p
+  for(int i = (x-side)/2; i < (x-side)/2+side; i++){
+    for(int j = (y-side)/2; j < (y-side)/2+side; j++){
+      if(r.sampleUniform()<p){
+	this->set(i,j,1);
+      }
+    }
   }
 }
 
@@ -167,11 +180,11 @@ void gol::run(int T,randomv &r, bool useRules, int window, ostream & wout, ostre
     this->printM();
     this->printV(vout);
     this->vectorizeS(5, wout);
-    this->vectorizeS(50, wout);
+    this->vectorizeS(25, wout);
   }
 }
 
-double gol::entropy(vector<int> & vectorS){
+double gol::density(vector<int> & vectorS){
   int aliveCounter = 0;
   int deadCounter = 0;
   for(vector<int>::iterator it = vectorS.begin(); it != vectorS.end(); ++it){
@@ -185,15 +198,32 @@ double gol::entropy(vector<int> & vectorS){
   }
   //frequencies
   double p = double(aliveCounter)/double(vectorS.size());
+  return p;
+}
+
+double gol::entropy(map<int, double> & hist){
   double H;
-  if(p == 0 || p == 1){
-    H =  log2(1);
-  }else{
-    H = p*log2(p) + (1-p)*log2(1-p);
+  for(map<int,double>::iterator it = hist.begin(); it != hist.end(); ++it){
+    double p = (*it).second;
+    H += p*log2(p);
   }
   return -H;
 }
 
+
+void gol::hist(map<int,double> & hist, vector<int> & vectorS){
+ for(vector<int>::iterator it = vectorS.begin(); it != vectorS.end(); ++it){
+   if(hist.find((*it)) != hist.end()){   //if element is already in map increment
+     hist[(*it)]++;
+   }else{    //else insert
+     hist.insert(pair<int,double> ((*it),1.)); //count how many times observed
+   }
+ }
+ //divide by total to get frequencies
+ for(map<int,double>::iterator it = hist.begin(); it != hist.end(); ++it){
+   hist[(*it).first] = (*it).second/double(vectorS.size());
+ }
+}
 
 double gol::log2( double x ) {
    return log( x ) / log( 2 ) ;
