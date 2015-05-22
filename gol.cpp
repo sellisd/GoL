@@ -1,25 +1,30 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include "gol.h"
 #include "randomv.h"
 using namespace std;
 gol::gol(void){
   x = 100;
   y = 100;
+  generation = 0;
   this->prepare();
 }
 
 gol::gol(int a, int b){
   x = a;
   y = b;
+  generation = 0;
   this->prepare();
 }
 
 void gol::prepare(){
+  //  int debug = 0;
   for(int i = 0; i < x; i++){
     vector<int> row; 
     for( int j = 0; j <y; j++){
       row.push_back(0);
+      //      debug++;
     }
     m.push_back(row);
   }
@@ -57,7 +62,7 @@ void gol::printM(void){
   cout<<endl;
 }
 
-void gol::printV(void){
+void gol::printV(ostream& vout){
   //print as one large vector, one generation per line
   char alive = '1';
   char dead = '0';
@@ -65,9 +70,9 @@ void gol::printV(void){
     for(vector<int>::iterator jt = (*it).begin(); jt != (*it).end(); ++jt){
       int value = (*jt);
       if(value == 1){
-        cout<<alive;
+        vout<<alive;
       }else if (value == 0){
-        cout<<dead;
+        vout<<dead;
       }else{
         exit(1);
       }
@@ -76,13 +81,26 @@ void gol::printV(void){
   cout<<endl;
 }
 
-void gol::printS(int window){
+void gol::vectorizeS(int window, ostream & wout){
+  //create vector of submatrix
   //print submatrices of size window as vectors
-  vector<vector<int> >::iterator it = m.begin();
-  vector<int>::iterator jt = (*it).begin();
-  for(int i = 0; i < window; i++){
-    for(int j = 0; j< window; j++){
-      
+  //output format
+  //generation windowSize windowId vector
+  vector<int> bitString;
+  int windowId = 0;
+  for(int I = 0; I < x; I+=window){
+    for(int J = 0; J < y; J+=window){
+      wout<<generation<<' ';
+      wout<<window<<' ';
+      wout<<windowId<<' ';
+      for(int i = 0; i < window; i++){
+	for(int j = 0; j< window; j++){
+	  bitString.push_back(m.at(i+I).at(j+J));
+	}
+      }
+      wout<<entropy(bitString);
+      windowId++;
+      wout<<endl;
     }
   }
 }
@@ -125,33 +143,59 @@ void gol::step(randomv &r, bool useRules){
       pair<int, int> mIJ(i,j);
       if(stateSum == 3){
         alive.push_back(mIJ);
-     //   newM.set(i,j,1);
-      }else if(stateSum == 4){
-       // keep identical
+      }else if(stateSum == 4){       // keep identical
       }else{
         dead.push_back(mIJ);
-//        newM.set(i,j,0);
       }   
     }
   }
   //once the fate of all cells is determined make changes
   for(vector<pair<int,int> >::iterator resurectIT = alive.begin(); resurectIT != alive.end(); ++resurectIT){
     this->set(resurectIT->first,resurectIT->second,1);
-//    cout<<resurectIT->first<<','<<resurectIT->second<<' ';
   }
-  //cout<<endl;
-
   for(vector<pair<int,int> >::iterator killIT = dead.begin(); killIT != dead.end(); ++killIT){
     this->set(killIT->first,killIT->second,0);
-    //cout<<killIT->first<<','<<killIT->second<<' ';
   }
-  //cout<<endl;
+  generation++;
 }
 
 
-void gol::run(int T,randomv &r, bool useRules){
+void gol::run(int T,randomv &r, bool useRules, int window, ostream & wout, ostream & vout){
   for (int t = 0; t < T; t++){
     this->step(r, useRules);
-    this->printV();
+    //    this->printS(window, wout);
+    this->printM();
+    this->printV(vout);
+    this->vectorizeS(5, wout);
+    this->vectorizeS(50, wout);
   }
 }
+
+double gol::entropy(vector<int> & vectorS){
+  int aliveCounter = 0;
+  int deadCounter = 0;
+  for(vector<int>::iterator it = vectorS.begin(); it != vectorS.end(); ++it){
+    if((*it) == 1){
+      aliveCounter++;
+    }else if ((*it) == 0){
+      deadCounter++;
+    }else{
+      exit(1);
+    }
+  }
+  //frequencies
+  double p = double(aliveCounter)/double(vectorS.size());
+  double H;
+  if(p == 0 || p == 1){
+    H =  log2(1);
+  }else{
+    H = p*log2(p) + (1-p)*log2(1-p);
+  }
+  return -H;
+}
+
+
+double gol::log2( double x ) {
+   return log( x ) / log( 2 ) ;
+}
+ 

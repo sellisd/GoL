@@ -1,19 +1,24 @@
 #include <iostream>
 #include <cstdlib>
+#include <fstream>
 #include "randomv.h"
 #include "gol.h"
 
-//g++ -Wall -o testing main.cpp  gol.cpp randomv.cpp -lgsl -lgslcblas
+//g++ -O3 -Wall -o testing main.cpp  gol.cpp randomv.cpp -lgsl -lgslcblas
 
 using namespace std;
 int main(int argc, char* argv[]){
-  int x = 50;
-  int y = 50;
+  int x = 100;
+  int y = 100;
   gol sim(x,y);
+  ofstream wout;
+  ofstream vout;
+  wout.open ("window.dat", std::ofstream::out);
+  vout.open ("vector.dat", std::ofstream::out);
   randomv r;
   sim.populateRandom(r,0.5*x*y);
-  sim.printV();
-  sim.run(1000,r,1);
+  //  sim.printV();
+  sim.run(1000,r,100,10,wout,vout);
  // gol.printM();
 	       //prepare grid
   //#make a grid objsect
