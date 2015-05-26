@@ -12,9 +12,9 @@
 using namespace std;
 int main(int argc, char* argv[]){
   randomv R;
-  lg he(100, 10);
-  he.initRand(R);
-  he.run(50);
+  lg he(100, 900);
+  he.initRegion(R,50,.9);
+  he.run(1000);
   exit(0);
   int replicates = 100;
   int x = 128;
