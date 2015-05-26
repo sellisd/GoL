@@ -236,7 +236,7 @@ double gol::density(vector<int> & vectorS){
 }
 
 double gol::entropy(map<int, double> & hist){
-  double H;
+  double H = 0;
   for(map<int,double>::iterator it = hist.begin(); it != hist.end(); ++it){
     double p = (*it).second;
     H += p*log2(p);
