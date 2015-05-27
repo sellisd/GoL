@@ -86,38 +86,41 @@ void ca::step(randomv &r){
     }
     if(interacting == true){
       if(this->swap(x1,y1, x2,y2)){
-	success = true;
+      	success = true;
       }
     }else{
       int currentV = this->get(x1,y1);
       int neighborV = this->get(x2,y2);
       if(currentV !=0){
-	this->set(x1,y1,currentV-1);
-	this->set(x2,y2,neighborV-1);
-	success = true;
+      	 this->set(x1,y1,currentV-1);
+	       this->set(x2,y2,neighborV-1);
+	       success = true;
       }
     }
   }
 }
 
-void ca::run(int Tmax, randomv & r, ostream & wout, entropy & entropyFunctions){
+void ca::run(int Tmax, randomv & r, ostream & wout, entropy & entropyFunctions, int by){
+  // print and calculate statistics only at by intervals
   for(int t = 0; t < Tmax; t++){
     this->step(r);
-    map<int,double> Hk;
-    entropyFunctions.pattern(Hk, grid);
-    for(map<int,double>::iterator it = Hk.begin(); it != Hk.end(); ++it){
-      wout<<t<<' '<<(*it).first<<' '<<(*it).second<<endl;
+    if(t % by == 0){
+      map<int,double> Hk;
+      entropyFunctions.pattern(Hk, grid);
+      for(map<int,double>::iterator it = Hk.begin(); it != Hk.end(); ++it){
+        wout<<t<<' '<<(*it).first<<' '<<(*it).second<<endl;
+      }
+      this->printV();
     }
-    this->printV();
   }
 }
 
 int ca::swap(int x1,int y1, int x2, int y2){
-  int a = grid.at(x1).at(y1);
-  int b = grid.at(x2).at(y2);
+  int a = this->get(x1,y1);
+  int b = this->get(x2,y2);
   if(a != b){
-    grid.at(x1).at(y1) = grid.at(x2).at(y2);
-    grid.at(x2).at(y2) = a;
+    this->set(x1,y1, b);
+    this->set(x2,y2,a);
     return 1;
   }else{
     return 0;

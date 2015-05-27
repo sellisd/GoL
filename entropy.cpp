@@ -62,10 +62,10 @@ void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector
       int sum = 0;
       int counter = 0;
       for(int i = 0; i < window; i++){
-	for(int j = 0; j< window; j++){
-	  sum+=grid.at(i+I).at(j+J);
-	  counter++;
-	}
+      	for(int j = 0; j< window; j++){
+          sum+=grid.at(i+I).at(j+J);
+          counter++;
+	       }
       }
       //  double mean = sum/double(counter);
       coarseGrained.push_back(sum);

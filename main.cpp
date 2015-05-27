@@ -20,14 +20,15 @@ int main(int argc, char* argv[]){
   ofstream vout;
   wout.open ("window.dat", std::ofstream::out);
   vout.open ("vector.dat", std::ofstream::out);
-  int replicates = 1;
+  int replicates = 10;
   randomv r;
   for (int replicate = 0; replicate < replicates; replicate++){
     /* coffee automaton
      */
     ca cappuccino(x);
+    cappuccino.setInteracting(true);
     cappuccino.populateRegion(r,50,.9);
-    cappuccino.run(1000,r, wout, entropyFunctions);
+    cappuccino.run(10000000,r, wout, entropyFunctions, 10000);
     /*
       HPP Lattice Gass
     lg he(x, 900);
