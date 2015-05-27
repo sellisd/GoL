@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <map>
 #include "lg.h"
 #include "randomv.h"
 
@@ -113,44 +114,55 @@ void lg::step(void){
       }
     }
   }
-  //resolve collisions in lattice 1
-   for(int i = 0; i < side; i++){
-     for(int j = 0; j < side; j++){
-       bool vertical = false;
-       bool horizontal = false;
-       if(lattice1.at(i).at(j).at(0) == 1 and lattice1.at(i).at(j).at(2) == 1){
-	 // vertical head collision
-	 vertical = true;
+  if(ignoreCollisions == true){
+  }else{
+    //resolve collisions in lattice 1
+    for(int i = 0; i < side; i++){
+      for(int j = 0; j < side; j++){
+	bool vertical = false;
+	bool horizontal = false;
+	if(lattice1.at(i).at(j).at(0) == 1 and lattice1.at(i).at(j).at(2) == 1){
+	  // vertical head collision
+	  vertical = true;
        }
-       if(lattice1.at(i).at(j).at(1) == 1 and lattice1.at(i).at(j).at(3) == 1){
-	 // horizontal head collision
-	 horizontal = true;
-       }
-       if(vertical == true and horizontal == true){
-	 // do nothing, particles are interchangeable
+	if(lattice1.at(i).at(j).at(1) == 1 and lattice1.at(i).at(j).at(3) == 1){
+	  // horizontal head collision
+	  horizontal = true;
+	}
+	if(vertical == true and horizontal == true){
+	  // do nothing, particles are interchangeable
        }else if(vertical == true and horizontal == false){
-	 lattice1.at(i).at(j).at(0) = 0;
-	 lattice1.at(i).at(j).at(1) = 1;
-	 lattice1.at(i).at(j).at(2) = 0;
-	 lattice1.at(i).at(j).at(3) = 1;
-       }else if(vertical == false and horizontal == true){
-	 lattice1.at(i).at(j).at(0) = 1;
-	 lattice1.at(i).at(j).at(1) = 0;
+	  lattice1.at(i).at(j).at(0) = 0;
+	  lattice1.at(i).at(j).at(1) = 1;
+	  lattice1.at(i).at(j).at(2) = 0;
+	  lattice1.at(i).at(j).at(3) = 1;
+	}else if(vertical == false and horizontal == true){
+	  lattice1.at(i).at(j).at(0) = 1;
+	  lattice1.at(i).at(j).at(1) = 0;
 	 lattice1.at(i).at(j).at(2) = 1;
 	 lattice1.at(i).at(j).at(3) = 0;
-       }else{
-	 // both false
-       }
-     }
-   } 
-   //copy lattice 1 back to lattice 0 and repeat
-   lattice = lattice1;  
+	}else{
+	  // both false
+	}
+      }
+    } 
+  }
+  //copy lattice 1 back to lattice 0 and repeat
+  lattice = lattice1;  
 }
 
-void lg::run(int Tmax){
+void lg::run(int Tmax, ostream & wout, entropy & entropyFunctions){
   for(int t = 0; t < Tmax; t++){
     this->step();
     this->printV();
+    map<int,double> Hk;
+    vector<vector<int> > grid; //grid to populate with snapshot of lattice
+    this->lattice2grid(grid);
+    entropyFunctions.pattern(Hk, grid);
+    for(map<int,double>::iterator it = Hk.begin(); it != Hk.end(); ++it){
+      wout<<t<<' '<<(*it).first<<' '<<(*it).second<<endl;
+    }
+
   }
 }
 
@@ -159,12 +171,28 @@ void lg::printV(void){
     for(int y = 0; y < side; y++){
       int particleNo = 0;
       for(int z = 0; z < 4; z++){
-	if (lattice.at(x).at(y).at(z) == 1){
-	  particleNo++;
-	}
+      	if (lattice.at(x).at(y).at(z) == 1){
+	        particleNo++;
+	      }
       }
       cout<<(particleNo==0?0:1);
     }
   }
   cout<<endl;
+}
+
+void lg::lattice2grid(vector<vector<int> > & grid){
+  for(int x = 0; x < side; x++){
+    vector<int> row;
+    for(int y = 0; y < side; y++){
+      int presence = 0;
+      for(int z = 0; z < 4; z++){
+        if(lattice.at(x).at(y).at(z)!=0){
+          presence = 1;
+        }
+      }
+      row.push_back(presence);
+    }
+    grid.push_back(row);
+  }
 }

@@ -83,35 +83,6 @@ void gol::printV(ostream& vout){
   vout<<endl;
 }
 
-void gol::pattern(map<int,double> & p){
-  for(int window = 2; window < x; window*=2){
-    vector<int> cg;
-    this->coarseGrain(cg, window);
-    map<int,double> histogram;
-    this->hist(histogram, cg);
-    pair<int,double> we(window,this->entropy(histogram));
-    p.insert(we);
-  }
-}
-
-void gol::coarseGrain(vector<int> & coarseGrained, int window){
-  //non overlapping windows without error check, x and y should be powers of 2
-  for(int I = 0; I < x; I+=window){
-    for(int J = 0; J < y; J+=window){
-      int sum = 0;
-      int counter = 0;
-      for(int i = 0; i < window; i++){
-	for(int j = 0; j< window; j++){
-	  sum+=m.at(i+I).at(j+J);
-	  counter++;
-	}
-      }
-      //  double mean = sum/double(counter);
-      coarseGrained.push_back(sum);
-    }
-  }
-}
-
 void gol::vectorizeS(int window, ostream & wout){
   //create vector of submatrix
   //print submatrices of size window as vectors
@@ -202,11 +173,11 @@ void gol::step(randomv &r, bool useRules){
 }
 
 
-void gol::run(int T,randomv &r, bool useRules, ostream & wout, ostream & vout){
+void gol::run(int T,randomv &r, bool useRules, ostream & wout, ostream & vout, entropy & entropyFunctions){
   for (int t = 0; t < T; t++){
     this->step(r, useRules);
     map<int,double> Hk;
-    this->pattern(Hk);
+    entropyFunctions.pattern(Hk, m);
     for(map<int,double>::iterator it = Hk.begin(); it != Hk.end(); ++it){
       wout<<t<<' '<<(*it).first<<' '<<(*it).second<<endl;
     }
@@ -235,30 +206,3 @@ double gol::density(vector<int> & vectorS){
   return p;
 }
 
-double gol::entropy(map<int, double> & hist){
-  double H = 0;
-  for(map<int,double>::iterator it = hist.begin(); it != hist.end(); ++it){
-    double p = (*it).second;
-    H += p*log2(p);
-  }
-  return -H;
-}
-
-void gol::hist(map<int,double> & hist, vector<int> & vectorS){
- for(vector<int>::iterator it = vectorS.begin(); it != vectorS.end(); ++it){
-   if(hist.find((*it)) != hist.end()){   //if element is already in map increment
-     hist[(*it)]++;
-   }else{    //else insert
-     hist.insert(pair<int,double> ((*it),1.)); //count how many times observed
-   }
- }
- //divide by total to get frequencies
- for(map<int,double>::iterator it = hist.begin(); it != hist.end(); ++it){
-   hist[(*it).first] = (*it).second/double(vectorS.size());
- }
-}
-
-double gol::log2( double x ) {
-   return log( x ) / log( 2 ) ;
-}
- 

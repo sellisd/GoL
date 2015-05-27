@@ -4,6 +4,8 @@
 #include <fstream>
 #include <map>
 #include "randomv.h"
+#include "entropy.h"
+
 using namespace std;
 /**
  * Game of Life on flat 2D torus grid
@@ -28,13 +30,8 @@ class gol{
   void populateRegion(randomv & r, int a, double p);
   int sumN(int i, int j);
   void step(randomv &r, bool useRules);
-  void run(int T,randomv &r, bool useRules, ostream & wout, ostream & vout);
-  double log2(double x);
-  double entropy(map<int,double> & hist);
+  void run(int T,randomv &r, bool useRules, ostream & wout, ostream & vout, entropy & entropyFunctions);
   double density(vector<int> & vectorS);
-  void hist(map<int,double> &, vector<int> & vectorS);
-  void coarseGrain(vector<int> & coarseGrained, int window);
-  void pattern(map<int,double> & p);
  private:
   int x; //!< number of rows
   int y; //!< number of columns
