@@ -6,8 +6,8 @@
 #include "randomv.h"
 using namespace std;
 gol::gol(void){
-  x = 100;
-  y = 100;
+  x = 128;
+  y = 128;
   generation = 0;
   this->prepare();
 }
