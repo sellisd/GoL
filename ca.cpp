@@ -29,8 +29,10 @@ void ca::prepare(void){
 }
 
 void ca::set(int i, int j, int value){
-  i = abs(i % side);
-  j = abs(j % side);
+  i = i % side;
+  j = j % side;
+  if(i<0){i += side;}
+  if(j<0){j += side;}
   grid.at(i).at(j) = value;
 }
 
@@ -92,13 +94,15 @@ void ca::step(randomv &r){
       int currentV = this->get(x1,y1);
       int neighborV = this->get(x2,y2);
       if(currentV !=0){
-      	 this->set(x1,y1,currentV-1);
-	       this->set(x2,y2,neighborV-1);
-	       success = true;
+	this->set(x1,y1,currentV-1);
+	this->set(x2,y2,neighborV+1);
+	success = true;
       }
     }
   }
 }
+
+
 
 void ca::run(int Tmax, randomv & r, ostream & wout, entropy & entropyFunctions, int by){
   // print and calculate statistics only at by intervals
@@ -130,7 +134,11 @@ int ca::swap(int x1,int y1, int x2, int y2){
 void ca::printV(void){
   for(int x = 0; x < side; x++){
     for(int y = 0; y < side; y++){
-      cout<<(grid.at(x).at(y)==0?0:1);
+      if(interacting==true){
+	cout<<grid.at(x).at(y);
+      }else{
+	cout<<grid.at(x).at(y)<<' ';
+      }
     }
   }
   cout<<endl;

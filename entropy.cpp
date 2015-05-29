@@ -45,7 +45,7 @@ double entropy::infEntropy(map<int, double> & hist){
 
 
 void entropy::pattern(map<int,double> & p, vector<vector<int> > & grid){
-  for(int window = 2; window < x; window*=2){
+  for(int window = 2; window < x/2; window*=2){
     vector<int> cg;
     this->coarseGrain(cg, window, grid);
     map<int,double> histogram;

@@ -32,8 +32,10 @@ void gol::prepare(){
 }
 
 void gol::set(int i, int j, int value){
-  i = abs(i % x);
-  j = abs(j % y);
+  i = i % x;
+  j = j % y;
+  if(i<0){i += x;}
+  if(j<0){j += y;}
   m.at(i).at(j) = value;
 }
 
