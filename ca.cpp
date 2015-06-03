@@ -109,10 +109,10 @@ void ca::run(int Tmax, randomv & r, ostream & wout, entropy & entropyFunctions, 
   for(int t = 0; t < Tmax; t++){
     this->step(r);
     if(t % by == 0){
-      map<int,double> Hk;
+      map<int,pair<double,double> > Hk;
       entropyFunctions.pattern(Hk, grid);
-      for(map<int,double>::iterator it = Hk.begin(); it != Hk.end(); ++it){
-        wout<<t<<' '<<(*it).first<<' '<<(*it).second<<endl;
+      for(map<int,pair<double, double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
+        wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
       }
       this->printV();
     }

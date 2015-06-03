@@ -44,13 +44,15 @@ double entropy::infEntropy(map<int, double> & hist){
 }
 
 
-void entropy::pattern(map<int,double> & p, vector<vector<int> > & grid){
+void entropy::pattern(map<int,pair<double,double> > & p, vector<vector<int> > & grid){
   for(int window = 2; window < x/2; window*=2){
     vector<int> cg;
     this->coarseGrain(cg, window, grid);
+    double K = compress(cg);
     map<int,double> histogram;
     this->hist(histogram, cg);
-    pair<int,double> we(window,this->infEntropy(histogram));
+    pair<double,double> entrCompl(this->infEntropy(histogram),K);
+    pair<int,pair<double,double> > we(window,entrCompl);
     p.insert(we);
   }
 }
@@ -67,8 +69,34 @@ void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector
           counter++;
 	       }
       }
-      //  double mean = sum/double(counter);
       coarseGrained.push_back(sum);
     }
   }
+}
+
+double entropy::compress(vector<int> & vectorS){
+  //compress vector (encode as value/copy list, eg 000111002 -> 03130221)
+  vector<int> compressed;
+  int prev = vectorS.front();
+  int counter = 0;
+  for(vector<int>::iterator it = vectorS.begin(); it != vectorS.end(); ++it){
+    if((*it) == prev){
+      counter++;
+    }else{
+      compressed.push_back(prev);
+      compressed.push_back(counter);
+      prev = (*it);
+      counter = 1;
+    }
+  }
+  int last = vectorS.back();
+  if(last == prev){
+    compressed.push_back(last);
+    compressed.push_back(counter);
+  }else{
+    compressed.push_back(last);
+    compressed.push_back(1);
+  }
+  //and return compression ratio
+  return double(vectorS.size())/double(compressed.size()); //return size of uncompressed vector
 }
