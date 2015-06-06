@@ -46,7 +46,7 @@ void ca::populateRegion(randomv & r, int window, double p){
   for( int i = (side-window)/2; i <(side-window)/2+window; i++){
     for(int j = (side-window)/2; j <(side-window)/2+window; j++){
       if(r.sampleUniform()<p){
-	grid.at(i).at(j) = 1;
+        grid.at(i).at(j) = 1;
       }
     }
   }
@@ -65,44 +65,67 @@ void ca::step(randomv &r){
 //   if multiple alive move only one to second location
   bool success = false;
   while (success != true) {
-    int x1 = r.sampleUniformInt(side);
-    int y1 = r.sampleUniformInt(side);
-    int neighbor = r.sampleUniformInt(4); // 0 1 2 3 = b l u r
-    int x2=x1;
-    int y2=y1;
-    switch(neighbor){
-    case 0:
-      x2++;
-      break;
-    case 1:
-      y2--;
-      break;
-    case 2:
-      x2--;
-      break;
-    case 3:
-      y2++;
-      break;
-    default:
-      exit(1);
-    }
     if(interacting == true){
+      int x1 = r.sampleUniformInt(side);
+      int y1 = r.sampleUniformInt(side);
+      int neighbor = r.sampleUniformInt(4); // 0 1 2 3 = b l u r
+      int x2=x1;
+      int y2=y1;
+      switch(neighbor){
+      case 0:
+        x2++;
+       break;
+      case 1:
+       y2--;
+       break;
+      case 2:
+       x2--;
+       break;
+      case 3:
+       y2++;
+       break;
+      default:
+       exit(1);
+      }
       if(this->swap(x1,y1, x2,y2)){
       	success = true;
       }
     }else{
-      int currentV = this->get(x1,y1);
-      int neighborV = this->get(x2,y2);
-      if(currentV !=0){
-    	this->set(x1,y1,currentV-1);
-	    this->set(x2,y2,neighborV+1);
-	    success = true;
+      //
+//    for each element pick a random direction and move it there
+      for (int x1 = 0; x1 < side; x1++){
+        for (int y1 = 0; y1 < side; y1++){
+          int currentV = this->get(x1,y1);
+          if(currentV !=0){
+            int neighbor = r.sampleUniformInt(4); // 0 1 2 3 = b l u r
+            int x2 = x1;
+            int y2 = y1;
+            switch(neighbor){
+            case 0:
+              x2++;
+              break;
+            case 1:
+              y2--;
+              break;
+            case 2:
+              x2--;
+              break;
+            case 3:
+              y2++;
+              break;
+            default:
+              exit(1);
+            }
+            int neighborV = this->get(x2,y2);
+            this->set(x1,y1,currentV-1);
+            this->set(x2,y2,neighborV+1);
+          }
+        }
       }
+      success = true; //moved all
     }
   }
 }
-
-
 
 void ca::run(int Tmax, randomv & r, ostream & wout, entropy & entropyFunctions, int by){
   // print and calculate statistics only at by intervals

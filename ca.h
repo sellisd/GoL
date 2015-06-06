@@ -6,9 +6,11 @@
 #include "entropy.h"
 
 using namespace std;
+
 /**
  * coffee automaton
  */
+
 class ca{
  public:
   ca(void);

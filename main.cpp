@@ -29,7 +29,7 @@ int main(int argc, char* argv[]){
   ofstream vout;
   wout.open ("window.dat", std::ofstream::out);
   vout.open ("vector.dat", std::ofstream::out);
-  int replicates = 1;
+  int replicates = 100;
   randomv r;
   for (int replicate = 0; replicate < replicates; replicate++){
     /**       Smooth gradient
@@ -56,9 +56,9 @@ int main(int argc, char* argv[]){
     /* coffee automaton
      */
     ca cappuccino(x);
-    cappuccino.setInteracting(true);
+    cappuccino.setInteracting(false);
     cappuccino.populateRegion(r,25,.9);
-    cappuccino.run(1000000,r, wout, entropyFunctions, 1000);
+    cappuccino.run(1000,r, wout, entropyFunctions, 10);
     /*
       HPP Lattice Gass
     lg he(x, 900);

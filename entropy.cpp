@@ -23,7 +23,6 @@ double entropy::log2( double x ) {
    return log( x ) / log( 2 ) ;
 }
 
-
 void entropy::hist(map<int,double> & hist, vector<int> & vectorS){
  for(vector<int>::iterator it = vectorS.begin(); it != vectorS.end(); ++it){
    if(hist.find((*it)) != hist.end()){   //if element is already in map increment
@@ -46,7 +45,6 @@ double entropy::infEntropy(map<int, double> & hist){
   }
   return -H;
 }
-
 
 void entropy::pattern(map<int,pair<double,double> > & p, vector<vector<int> > & grid){
   for(int window = 2; window < x/2; window*=2){
