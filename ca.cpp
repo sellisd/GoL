@@ -94,9 +94,9 @@ void ca::step(randomv &r){
       int currentV = this->get(x1,y1);
       int neighborV = this->get(x2,y2);
       if(currentV !=0){
-	this->set(x1,y1,currentV-1);
-	this->set(x2,y2,neighborV+1);
-	success = true;
+    	this->set(x1,y1,currentV-1);
+	    this->set(x2,y2,neighborV+1);
+	    success = true;
       }
     }
   }

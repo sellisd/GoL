@@ -155,12 +155,12 @@ void lg::run(int Tmax, ostream & wout, entropy & entropyFunctions){
   for(int t = 0; t < Tmax; t++){
     this->step();
     this->printV();
-    map<int,double> Hk;
+    map<int,pair<double,double> >Hk;
     vector<vector<int> > grid; //grid to populate with snapshot of lattice
     this->lattice2grid(grid);
     entropyFunctions.pattern(Hk, grid);
-    for(map<int,double>::iterator it = Hk.begin(); it != Hk.end(); ++it){
-      wout<<t<<' '<<(*it).first<<' '<<(*it).second<<endl;
+    for(map<int,pair<double, double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
+      wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
     }
 
   }

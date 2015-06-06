@@ -9,10 +9,12 @@
 #include "ca.h"
 #include "entropy.h"
 #include <limits>
-//g++  -Wall -o testing main.cpp entropy.cpp gol.cpp lg.cpp ca.cpp randomv.cpp -lgsl -lgslcblas
 
+//g++  -Wall -o testing main.cpp entropy.cpp gol.cpp lg.cpp ca.cpp randomv.cpp lodepng.cpp -lgsl -lgslcblas
 using namespace std;
+
 int main(int argc, char* argv[]){
+
   /*Options
 0:     Gradient
 1:     HPP Lattice Gas
@@ -27,7 +29,7 @@ int main(int argc, char* argv[]){
   ofstream vout;
   wout.open ("window.dat", std::ofstream::out);
   vout.open ("vector.dat", std::ofstream::out);
-  int replicates = 100;
+  int replicates = 1;
   randomv r;
   for (int replicate = 0; replicate < replicates; replicate++){
     /**       Smooth gradient
@@ -54,10 +56,9 @@ int main(int argc, char* argv[]){
     /* coffee automaton
      */
     ca cappuccino(x);
-    cappuccino.setInteracting(false);
+    cappuccino.setInteracting(true);
     cappuccino.populateRegion(r,25,.9);
-    cappuccino.run(100000,r, wout, entropyFunctions, 1000);
-    
+    cappuccino.run(1000000,r, wout, entropyFunctions, 1000);
     /*
       HPP Lattice Gass
     lg he(x, 900);

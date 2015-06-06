@@ -178,10 +178,10 @@ void gol::step(randomv &r, bool useRules){
 void gol::run(int T,randomv &r, bool useRules, ostream & wout, ostream & vout, entropy & entropyFunctions){
   for (int t = 0; t < T; t++){
     this->step(r, useRules);
-    map<int,double> Hk;
+    map<int,pair<double,double> > Hk;
     entropyFunctions.pattern(Hk, m);
-    for(map<int,double>::iterator it = Hk.begin(); it != Hk.end(); ++it){
-      wout<<t<<' '<<(*it).first<<' '<<(*it).second<<endl;
+    for(map<int,pair<double,double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
+      wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
     }
     //    this->printS(window, wout);
     /*    this->printM();
