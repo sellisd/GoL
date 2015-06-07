@@ -29,8 +29,8 @@ class gol{
   void populateRandom(randomv & r, int a);
   void populateRegion(randomv & r, int a, double p);
   int sumN(int i, int j);
-  void step(randomv &r, bool useRules);
-  void run(int T,randomv &r, bool useRules, ostream & wout, ostream & vout, entropy & entropyFunctions);
+  void step(randomv &r);
+  void run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by);
   double density(vector<int> & vectorS);
  private:
   int x; //!< number of rows

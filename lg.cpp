@@ -10,9 +10,8 @@ lg::lg(void){
 }
 
 
-lg::lg(int a, int b){
+lg::lg(int a){
   side = a;
-  N = b;
   for(int x = 0; x < side; x++){
     vector<vector<int> > row;
     for(int y = 0; y < side; y++){
@@ -23,7 +22,7 @@ lg::lg(int a, int b){
   }
 }
 
-void lg::initRand(randomv & r){
+void lg::initRand(randomv & r, int N){
   for(int i = 0; i < N; i++){
     int x = r.sampleUniformInt(side);
     int y = r.sampleUniformInt(side);
@@ -43,14 +42,14 @@ void lg::initRegion(randomv & r, int window,double p){
   for( int i = (side-window)/2; i <(side-window)/2+window; i++){
     for(int j = (side-window)/2; j <(side-window)/2+window; j++){
       if(r.sampleUniform()<p){
-	int directionI = r.sampleUniformInt(4);
-	for(int z = 0; z < 4; z++){
-	  if(z == directionI){
-	    lattice.at(i).at(j).at(z) = 1;
-	  }else{
-	    lattice.at(i).at(j).at(z) = 0;
-	  }
-	}
+      	int directionI = r.sampleUniformInt(4);
+	      for(int z = 0; z < 4; z++){
+          if(z == directionI){
+	          lattice.at(i).at(j).at(z) = 1;
+	        }else{
+	          lattice.at(i).at(j).at(z) = 0;
+	        }
+	      }
       }
     }
   }
@@ -151,18 +150,19 @@ void lg::step(void){
   lattice = lattice1;  
 }
 
-void lg::run(int Tmax, ostream & wout, entropy & entropyFunctions){
+void lg::run(int Tmax, ostream & wout, entropy & entropyFunctions, int by){
   for(int t = 0; t < Tmax; t++){
     this->step();
-    this->printV();
-    map<int,pair<double,double> >Hk;
-    vector<vector<int> > grid; //grid to populate with snapshot of lattice
-    this->lattice2grid(grid);
-    entropyFunctions.pattern(Hk, grid);
-    for(map<int,pair<double, double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
-      wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
+    if(t % by == 0){
+      map<int,pair<double,double> >Hk;
+      vector<vector<int> > grid; //grid to populate with snapshot of lattice
+      this->lattice2grid(grid);
+      entropyFunctions.pattern(Hk, grid);
+      for(map<int,pair<double, double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
+        wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
+      }
+      this->printV();
     }
-
   }
 }
 

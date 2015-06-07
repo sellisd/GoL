@@ -141,7 +141,7 @@ int gol::sumN(int i, int j){
 }
 
 
-void gol::step(randomv &r, bool useRules){
+void gol::step(randomv &r){
   //make list of changes and perform them in the end
   vector<pair<int,int> > alive;
   vector<pair<int,int> > dead;
@@ -149,12 +149,7 @@ void gol::step(randomv &r, bool useRules){
     for(int j = 0; j < y; j++){
       // foreach cell sum 9 surrounding ones
       int stateSum;
-      if(useRules){
-        stateSum = this->sumN(i,j);
-      }else{
-        //in the random alternative return a random integer from 0 to 9 TODO implement a temperature
-        stateSum = r.sampleUniformInt(10);
-      }
+      stateSum = this->sumN(i,j);
       pair<int, int> mIJ(i,j);
       if(stateSum == 3){
         alive.push_back(mIJ);
@@ -175,19 +170,16 @@ void gol::step(randomv &r, bool useRules){
 }
 
 
-void gol::run(int T,randomv &r, bool useRules, ostream & wout, ostream & vout, entropy & entropyFunctions){
+void gol::run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
   for (int t = 0; t < T; t++){
-    this->step(r, useRules);
-    map<int,pair<double,double> > Hk;
-    entropyFunctions.pattern(Hk, m);
-    for(map<int,pair<double,double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
-      wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
+    this->step(r);
+    if(t % by == 0){
+      map<int,pair<double,double> > Hk;
+      entropyFunctions.pattern(Hk, m);
+      for(map<int,pair<double,double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
+        wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
+      }
     }
-    //    this->printS(window, wout);
-    /*    this->printM();
-    this->printV(vout);
-    this->vectorizeS(5, wout);
-    this->vectorizeS(25, wout);*/
   }
 }
 

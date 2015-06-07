@@ -158,9 +158,9 @@ void ca::printV(void){
   for(int x = 0; x < side; x++){
     for(int y = 0; y < side; y++){
       if(interacting==true){
-	cout<<grid.at(x).at(y);
+      	cout<<grid.at(x).at(y);
       }else{
-	cout<<grid.at(x).at(y)<<' ';
+        cout<<grid.at(x).at(y)<<' ';
       }
     }
   }

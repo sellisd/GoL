@@ -20,18 +20,15 @@ class lg{
   lg(int a, int b);
   void setSide(int a){ side = a; }
   int  getSide(void){ return side; }
-  void setN(int a){ N = a; }
-  int  getN(void){ return N; }
   void step(void);
-  void initRand(randomv &r);
-  void run(int Tmax,ostream & wout, entropy & entropyFunctions);
+  void initRand(randomv &r, int N);
+  void run(int Tmax,ostream & wout, entropy & entropyFunctions, int by);
   void printV(void);
   void initRegion(randomv &r, int window, double p);
   void lattice2grid(vector<vector<int> > & grid);
   void setIgnoreCollisions(bool a){ ignoreCollisions = a; }
  private:
   int side; // box side
-  int N; // number of particles
   vector<vector<vector<int> > > lattice; //x.y.<0:botom.1:left.2:up.3:right>
   vector<int> direction; //direction
   vector<pair<int, int> > coordinates; 
