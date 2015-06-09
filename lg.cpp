@@ -152,7 +152,6 @@ void lg::step(void){
 
 void lg::run(int Tmax, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
   for(int t = 0; t < Tmax; t++){
-    this->step();
     if(t % by == 0){
       map<int,pair<double,double> >Hk;
       vector<vector<int> > grid; //grid to populate with snapshot of lattice
@@ -163,6 +162,7 @@ void lg::run(int Tmax, ostream & wout, ostream & vout, entropy & entropyFunction
       }
       this->printV(t, vout);
     }
+    this->step();
   }
 }
 

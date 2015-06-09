@@ -173,7 +173,6 @@ void gol::step(randomv &r){
 
 void gol::run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
   for (int t = 0; t < T; t++){
-    this->step(r);
     if(t % by == 0){
       map<int,pair<double,double> > Hk;
       entropyFunctions.pattern(Hk, m);
@@ -182,6 +181,7 @@ void gol::run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entrop
       }
       this->printV(t, vout);
     }
+    this->step(r);
   }
 }
 

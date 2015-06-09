@@ -129,8 +129,7 @@ void ca::step(randomv &r){
 
 void ca::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
   // print and calculate statistics only at by intervals
-  for(int t = 0; t < Tmax; t++){
-    this->step(r);
+  for(int t = 0; t <= Tmax; t++){
     if(t % by == 0){
       map<int,pair<double,double> > Hk;
       entropyFunctions.pattern(Hk, grid);
@@ -139,6 +138,7 @@ void ca::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy & en
       }
       this->printV(t, vout);
     }
+    this->step(r);
   }
 }
 
