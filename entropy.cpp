@@ -47,7 +47,7 @@ double entropy::infEntropy(map<int, double> & hist){
 }
 
 void entropy::pattern(map<int,pair<double,double> > & p, vector<vector<int> > & grid){
-  for(int window = 2; window < x/2; window*=2){
+  for(int window = 2; window < x; window*=2){
     vector<int> cg;
     this->coarseGrain(cg, window, grid);
     double K = compressPNG(cg, x/window);
@@ -100,11 +100,11 @@ double entropy::compress(vector<int> & vectorS){
     compressed.push_back(last);
     compressed.push_back(1);
   }
-  //and return compression ratio
-  return double(compressed.size())/double(vectorS.size()); //return size of uncompressed vector
+  //and return compressed size
+  return double(compressed.size()); //return size of compressed vector
 }
 
-double entropy::compressPNG(vector<int> & vectorS, int width){
+double entropy::compressPNG(vector<int> & vectorS, unsigned int width){
   /*
     use lodepng
     */
@@ -114,8 +114,8 @@ double entropy::compressPNG(vector<int> & vectorS, int width){
     cerr<<"Error: empty array"<<endl;
     exit(1);
   }
-  if(*M > 254){
-    cerr<<"Error: cannot code char from int>255 using only the Red chanel"<<endl;
+  if(*M > 255*255-1){
+    cerr<<"Error: cannot code int>65024 using only the Red and Green chanel"<<endl;
     exit(1);
   }
   vector<unsigned char> uncompressed;
@@ -123,8 +123,10 @@ double entropy::compressPNG(vector<int> & vectorS, int width){
   int counter = 0;
   for(unsigned i = 0; i < width; i++){
     for(unsigned j = 0; j < width; j++){
-      uncompressed[4 * width * i + 4 * j + 0] = vectorS.at(counter)+1; // R
-      uncompressed[4 * width * i + 4 * j + 1] = 1; // G
+      int value = vectorS.at(counter)+1;
+      int div = ceil(double(value)/255.);
+      uncompressed[4 * width * i + 4 * j + 0] = div; // R
+      uncompressed[4 * width * i + 4 * j + 1] = value-255*(div-1); // G
       uncompressed[4 * width * i + 4 * j + 2] = 1; // B
       uncompressed[4 * width * i + 4 * j + 3] = 255; // alpha
       counter++;
@@ -132,9 +134,9 @@ double entropy::compressPNG(vector<int> & vectorS, int width){
   }
   vector<unsigned char> compressed;
   unsigned error = lodepng::encode(compressed,uncompressed, width, width);
-  double ratio = -1;
+  double compSize = -1;
   if(!error){
-    ratio = double(compressed.size())/double(uncompressed.size());
+    compSize = double(compressed.size());
     /* save image
        const char* filename2 = "test2.png";
        lodepng::save_file(compressed,filename2);
@@ -143,5 +145,5 @@ double entropy::compressPNG(vector<int> & vectorS, int width){
     cerr<<"Ups"<<endl;
     exit(1);
   }
-  return ratio;
+  return compSize;
 }

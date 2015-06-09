@@ -17,7 +17,7 @@ using namespace std;
 class lg{
  public:
   lg(void);
-  lg(int a, int b);
+  lg(int a);
   void setSide(int a){ side = a; }
   int  getSide(void){ return side; }
   void step(void);
