@@ -65,10 +65,11 @@ void gol::printM(void){
   cout<<endl;
 }
 
-void gol::printV(ostream& vout){
+void gol::printV(int t, ostream& vout){
   //print as one large vector, one generation per line
   char alive = '1';
   char dead = '0';
+  vout<<t<<' ';
   for(vector<vector<int> >::iterator it = m.begin(); it != m.end(); ++it){
     for(vector<int>::iterator jt = (*it).begin(); jt != (*it).end(); ++jt){
       int value = (*jt);
@@ -179,6 +180,7 @@ void gol::run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entrop
       for(map<int,pair<double,double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
         wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
       }
+      this->printV(t, vout);
     }
   }
 }

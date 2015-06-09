@@ -22,9 +22,9 @@ class ca{
   int get(int i, int j);
   void populateRegion(randomv & r, int a, double p);
   void step(randomv &r);
-  void run(int T,randomv &r, ostream & wout, entropy & entropyFunctions, int by);
+  void run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by);
   int swap(int x1, int y1, int x2, int y2);
-  void printV(void);
+  void printV(int t, ostream & vout);
   void setInteracting(bool i) { interacting = i; } 
  private:
   int side;

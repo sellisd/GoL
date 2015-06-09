@@ -20,7 +20,7 @@ class gol{
   void setY(int a) { y = a; }
   void prepare(void); //initialize
   void printM(void);
-  void printV(ostream & vout);
+  void printV(int t, ostream & vout);
   void vectorizeS(int window, ostream & wout);
   void set(int i, int j, int value);
   int get(int i, int j);

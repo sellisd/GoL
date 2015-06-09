@@ -22,8 +22,8 @@ class lg{
   int  getSide(void){ return side; }
   void step(void);
   void initRand(randomv &r, int N);
-  void run(int Tmax,ostream & wout, entropy & entropyFunctions, int by);
-  void printV(void);
+  void run(int Tmax,ostream & wout, ostream & vout,  entropy & entropyFunctions, int by);
+  void printV(int t, ostream & vout);
   void initRegion(randomv &r, int window, double p);
   void lattice2grid(vector<vector<int> > & grid);
   void setIgnoreCollisions(bool a){ ignoreCollisions = a; }

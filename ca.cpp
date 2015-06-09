@@ -127,7 +127,7 @@ void ca::step(randomv &r){
   }
 }
 
-void ca::run(int Tmax, randomv & r, ostream & wout, entropy & entropyFunctions, int by){
+void ca::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
   // print and calculate statistics only at by intervals
   for(int t = 0; t < Tmax; t++){
     this->step(r);
@@ -137,7 +137,7 @@ void ca::run(int Tmax, randomv & r, ostream & wout, entropy & entropyFunctions, 
       for(map<int,pair<double, double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
         wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
       }
-      this->printV();
+      this->printV(t, vout);
     }
   }
 }
@@ -154,15 +154,16 @@ int ca::swap(int x1,int y1, int x2, int y2){
   }
 }
 
-void ca::printV(void){
+void ca::printV(int t, ostream & vout){
+  vout<<t<<' ';
   for(int x = 0; x < side; x++){
     for(int y = 0; y < side; y++){
       if(interacting==true){
-      	cout<<grid.at(x).at(y);
+      	vout<<grid.at(x).at(y);
       }else{
-        cout<<grid.at(x).at(y)<<' ';
+        vout<<grid.at(x).at(y)<<' ';
       }
     }
   }
-  cout<<endl;
+  vout<<endl;
 }

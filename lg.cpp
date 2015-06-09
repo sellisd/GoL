@@ -150,7 +150,7 @@ void lg::step(void){
   lattice = lattice1;  
 }
 
-void lg::run(int Tmax, ostream & wout, entropy & entropyFunctions, int by){
+void lg::run(int Tmax, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
   for(int t = 0; t < Tmax; t++){
     this->step();
     if(t % by == 0){
@@ -161,24 +161,25 @@ void lg::run(int Tmax, ostream & wout, entropy & entropyFunctions, int by){
       for(map<int,pair<double, double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
         wout<<t<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
       }
-      this->printV();
+      this->printV(t, vout);
     }
   }
 }
 
-void lg::printV(void){
+void lg::printV(int t, ostream & vout){
+  vout<<t<<' ';
   for(int x = 0; x < side; x++){
     for(int y = 0; y < side; y++){
       int particleNo = 0;
       for(int z = 0; z < 4; z++){
       	if (lattice.at(x).at(y).at(z) == 1){
-	        particleNo++;
-	      }
+	  particleNo++;
+	}
       }
-      cout<<(particleNo==0?0:1);
+      vout<<particleNo;
     }
   }
-  cout<<endl;
+  vout<<endl;
 }
 
 void lg::lattice2grid(vector<vector<int> > & grid){
