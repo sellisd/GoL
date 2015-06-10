@@ -13,9 +13,10 @@ class entropy{
   void   hist(map<int,double> &, vector<int> & vectorS);
   double infEntropy(map<int,double> & hist);
   void   coarseGrain(vector<int> & coarseGrained, int window, vector<vector<int> > & grid);
-  void   pattern(map<int,pair<double, double> > & p, vector<vector<int> > & grid);
-  double    compress(vector<int> & vectorS);
+  void   pattern(vector<int> ws, vector<int> ss, vector<double> k1s, vector<double> k2s, vector<double> es, vector<vector<int> > & grid);
+  double compress(vector<int> & vectorS);
   double compressPNG(vector<int> & vectorS, unsigned int window);
+  int    boxCount(vector<int> & vectorS);
  private:
   int x;
   int y;

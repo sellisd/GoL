@@ -46,17 +46,27 @@ double entropy::infEntropy(map<int, double> & hist){
   return -H;
 }
 
-void entropy::pattern(map<int,pair<double,double> > & p, vector<vector<int> > & grid){
+void entropy::pattern(vector<int> ws, vector<int> ss, vector<double> k1s, vector<double> k2s, vector<double> es, vector<vector<int> > & grid){
   for(int window = 2; window < x; window*=2){
+    ws.push_back(window);
     vector<int> cg;
     this->coarseGrain(cg, window, grid);
-    double K = compressPNG(cg, x/window);
-    //double K = compress(cg);
+    // calculate Dimension
+    int S = this->boxCount(cg);
+    ss.push_back(S);
+    // calculate Complexity
+    double K1 = compressPNG(cg, x/window);
+    k1s.push_back(K1);
+    double K2 = compress(cg);
+    k2s.push_back(K2);
+    // calculate Entropy
     map<int,double> histogram;
     this->hist(histogram, cg);
-    pair<double,double> entrCompl(this->infEntropy(histogram),K);
-    pair<int,pair<double,double> > we(window,entrCompl);
-    p.insert(we);
+    double H = this->infEntropy(histogram);
+    es.push_back(H);
+    // pair<double,double> entrCompl(H,K);
+    // pair<int,pair<double,double> > we(window,entrCompl);
+    // p.insert(we);
   }
 }
 
@@ -146,4 +156,16 @@ double entropy::compressPNG(vector<int> & vectorS, unsigned int width){
     exit(1);
   }
   return compSize;
+}
+
+int entropy::boxCount(vector<int> & coarseGrained){
+  //calculate box counting dimension (Minkowski-Bouligand)
+  //the input is already coarse grained so we just have to calculate if the sum of entries > 0
+  int sum = 0;
+  for(vector<int>::iterator it = coarseGrained.begin(); it != coarseGrained.end();  ++it){
+    if ((*it)>0){
+      sum++;
+    }
+  }
+  return sum;
 }

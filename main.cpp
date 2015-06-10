@@ -84,10 +84,14 @@ Lattice Gas
 	}
 	grid.push_back(row);
       }
-      map<int,pair<double,double> > Hk;
-      entropyFunctions.pattern(Hk, grid);
-      for(map<int,pair<double,double> >::iterator it = Hk.begin(); it != Hk.end(); ++it){
-	cout<<' '<<(*it).first<<' '<<(*it).second.first<<' '<<(*it).second.second<<endl;
+      vector<int> ws;
+      vector<int> ss;
+      vector<double> k1s;
+      vector<double> k2s;
+      vector<double> es;
+      entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
+      for(unsigned int i = 0; i<ws.size(); ++i){
+	cout<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       break;
     }
