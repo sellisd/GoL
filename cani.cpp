@@ -25,7 +25,7 @@ void cani::populateRegion(randomv &r, int window, double p){
 }
 
 void cani::step(randomv &r){
-  for(int i = 0; i<x.size(); i++){
+  for(unsigned int i = 0; i<x.size(); i++){
     int x2 = x.at(i);
     int y2 = y.at(i);
     int direction = r.sampleUniformInt(4); // 0 1 2 3 : b l u r
@@ -62,7 +62,7 @@ void cani::printV(int t, ostream & vout){
   // Create vector of size side*side filled with 0
   vout<<t<<' ';
   vector<int> vectorS(side*side,0);
-  for(int i = 0; i< x.size(); ++i){
+  for(unsigned int i = 0; i< x.size(); ++i){
     vector<int>::iterator it = vectorS.begin();
     it+=(x.at(i) + side*y.at(i));
     (*it)++;
@@ -98,7 +98,7 @@ void cani::run(int Tmax,randomv &r, ostream & wout, ostream & vout, entropy & en
 void cani::makeGrid(vector<vector<int> > & grid){
   // Create vector of size side*side filled with 0
   vector<int> vectorS(side*side,0);
-  for(int i = 0; i< x.size(); ++i){
+  for(unsigned int i = 0; i< x.size(); ++i){
     vector<int>::iterator it = vectorS.begin();
     it+=(x.at(i) + side*y.at(i));
     (*it)++;

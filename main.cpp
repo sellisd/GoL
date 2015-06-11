@@ -10,9 +10,9 @@
 #include "ca.h"
 #include "entropy.h"
 #include "cani.h"
-#include <limits>
+#include "generateStatic.h"
 
-//g++  -Wall -o run main.cpp entropy.cpp gol.cpp lg.cpp ca.cpp cani.cpp randomv.cpp lodepng.cpp -lgsl -lgslcblas
+//g++  -Wall -o run main.cpp entropy.cpp gol.cpp lg.cpp ca.cpp cani.cpp generateStatic.cpp randomv.cpp lodepng.cpp -lgsl -lgslcblas
 using namespace std;
 
 int main(int argc, char* argv[]){
@@ -42,6 +42,7 @@ Lattice Gas
 2:     Game of Life
 3:     Coffee automaton interacting
 4:     Coffee automaton non-interacting
+5:     Sierpinski's Carpet
    */
   int x;
   int model;
@@ -73,18 +74,18 @@ Lattice Gas
   for (int replicate = 0; replicate < replicates; replicate++){
     switch(model){
     case 0:{          // Smooth gradient
+      //initialize grid
       vector<vector<int> > grid;
       for (int i = 0; i < x; i++){
 	vector<int> row;
 	for(int j = 0; j<y; j++){
-	  if(double(i)/double(x) < r.sampleUniform()){
 	    row.push_back(0);
-	  }else{
-	    row.push_back(1);
-	  }
 	}
 	grid.push_back(row);
       }
+      // initialize static library
+      generateStatic tables(x);
+      tables.gradient(grid,r);
       vector<int> ws;
       vector<int> ss;
       vector<double> k1s;
@@ -92,7 +93,7 @@ Lattice Gas
       vector<double> es;
       entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
       for(unsigned int i = 0; i<ws.size(); ++i){
-	cout<<i<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+	wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       break;
     }
@@ -111,7 +112,6 @@ Lattice Gas
     }
     case 3:{        // interacting coffee automaton
       ca cappuccino(x);
-      cappuccino.setInteracting(true);
       cappuccino.populateRegion(r,25,.9);
       cappuccino.run(Tmax,r, wout, vout, entropyFunctions, by);
       break;
@@ -123,7 +123,30 @@ Lattice Gas
       late.run(Tmax,r, wout, vout, entropyFunctions, by);      
       break;
     }
-    default:
+    case 5:{         // Sierinski's carpet
+      //initialize grid
+      vector<vector<int> > grid;
+      for (int i = 0; i < x; i++){
+	vector<int> row;
+	for(int j = 0; j<y; j++){
+	  row.push_back(0);
+	}
+	grid.push_back(row);
+      }
+      // initialize static library
+      generateStatic tables(x);
+      //    tables.printMatrix(grid);
+      vector<int> ws;
+      vector<int> ss;
+      vector<double> k1s;
+      vector<double> k2s;
+      vector<double> es;
+      entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
+      for(unsigned int i = 0; i<ws.size(); ++i){
+	wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+      }
+      break;
+    }default:
       exit(1);
     }
   }

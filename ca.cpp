@@ -101,10 +101,9 @@ void ca::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy & en
 	wout<<t<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       this->printV(t, vout);
+      cerr<<this->particleNo(grid)<<endl;
     }
-    cerr<<this->particleNo(grid)<<' ';
     this->step(r);
-    cerr<<this->particleNo(grid)<<endl;
   }
 }
 
