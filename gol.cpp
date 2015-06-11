@@ -181,7 +181,7 @@ void gol::run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entrop
       vector<double> es;
       entropyFunctions.pattern(ws,ss,k1s,k2s,es, m);
       for(unsigned int i = 0; i<ws.size(); ++i){
-	wout<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+	wout<<t<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       this->printV(t, vout);
     }

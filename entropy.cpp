@@ -46,8 +46,10 @@ double entropy::infEntropy(map<int, double> & hist){
   return -H;
 }
 
-void entropy::pattern(vector<int> ws, vector<int> ss, vector<double> k1s, vector<double> k2s, vector<double> es, vector<vector<int> > & grid){
-  for(int window = 2; window < x; window*=2){
+void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, vector<double> & k2s, vector<double> & es, vector<vector<int> > & grid){
+  //for Dimension use larger range of window values
+  for(int window = 1; window <= x; window*=2){
+    //  for(int window = 2; window < x; window*=2){
     ws.push_back(window);
     vector<int> cg;
     this->coarseGrain(cg, window, grid);
@@ -160,7 +162,7 @@ double entropy::compressPNG(vector<int> & vectorS, unsigned int width){
 
 int entropy::boxCount(vector<int> & coarseGrained){
   //calculate box counting dimension (Minkowski-Bouligand)
-  //the input is already coarse grained so we just have to calculate if the sum of entries > 0
+  //the input is already coarse grained so we just have to calculate the sum of entries > 0
   int sum = 0;
   for(vector<int>::iterator it = coarseGrained.begin(); it != coarseGrained.end();  ++it){
     if ((*it)>0){

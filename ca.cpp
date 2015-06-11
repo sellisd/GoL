@@ -7,7 +7,7 @@
 
 using namespace std;
 ca::ca(void){
-  side = 128;
+  side = 64;
   generation = 0;
   this->prepare();
 }
@@ -56,73 +56,33 @@ void ca::step(randomv &r){
   //- coffee automaton lattice rule is random swap two adjacent particles At each time step, choose 2 horizontally or vertically adjacent squares uniformly at random and swap them if they’re colored differentl
 // pick one random i
 // pick random
-// if interacting
 //   if different color swap 
 //   else pick another and repeat
-// if not interacting
-//   if selected is not alive pick another and repeat
-//   if 1 alive move to second location and add values
-//   if multiple alive move only one to second location
   bool success = false;
   while (success != true) {
-    if(interacting == true){
-      int x1 = r.sampleUniformInt(side);
-      int y1 = r.sampleUniformInt(side);
-      int neighbor = r.sampleUniformInt(4); // 0 1 2 3 = b l u r
-      int x2=x1;
-      int y2=y1;
-      switch(neighbor){
-      case 0:
-        x2++;
-       break;
-      case 1:
-       y2--;
-       break;
-      case 2:
-       x2--;
-       break;
-      case 3:
-       y2++;
-       break;
-      default:
-       exit(1);
-      }
-      if(this->swap(x1,y1, x2,y2)){
-      	success = true;
-      }
-    }else{
-      //
-//    for each element pick a random direction and move it there
-      for (int x1 = 0; x1 < side; x1++){
-        for (int y1 = 0; y1 < side; y1++){
-          int currentV = this->get(x1,y1);
-          if(currentV !=0){
-            int neighbor = r.sampleUniformInt(4); // 0 1 2 3 = b l u r
-            int x2 = x1;
-            int y2 = y1;
-            switch(neighbor){
-            case 0:
-              x2++;
-              break;
-            case 1:
-              y2--;
-              break;
-            case 2:
-              x2--;
-              break;
-            case 3:
-              y2++;
-              break;
-            default:
-              exit(1);
-            }
-            int neighborV = this->get(x2,y2);
-            this->set(x1,y1,currentV-1);
-            this->set(x2,y2,neighborV+1);
-          }
-        }
-      }
-      success = true; //moved all
+    int x1 = r.sampleUniformInt(side);
+    int y1 = r.sampleUniformInt(side);
+    int neighbor = r.sampleUniformInt(4); // 0 1 2 3 = b l u r
+    int x2=x1;
+    int y2=y1;
+    switch(neighbor){
+    case 0:{
+      x2++;
+      break;}
+    case 1:{
+      y2--;
+      break;}
+    case 2:{
+      x2--;
+      break;}
+    case 3:{
+      y2++;
+      break;}
+    default:
+      exit(1);
+    }
+    if(this->swap(x1,y1, x2,y2)){
+      success = true;
     }
   }
 }
@@ -138,11 +98,13 @@ void ca::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy & en
       vector<double> es;
       entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
       for(unsigned int i = 0; i<ws.size(); ++i){
-	wout<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+	wout<<t<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       this->printV(t, vout);
     }
+    cerr<<this->particleNo(grid)<<' ';
     this->step(r);
+    cerr<<this->particleNo(grid)<<endl;
   }
 }
 
@@ -162,12 +124,20 @@ void ca::printV(int t, ostream & vout){
   vout<<t<<' ';
   for(int x = 0; x < side; x++){
     for(int y = 0; y < side; y++){
-      if(interacting==true){
-      	vout<<grid.at(x).at(y);
-      }else{
-        vout<<grid.at(x).at(y)<<' ';
-      }
+      vout<<grid.at(x).at(y);
     }
   }
   vout<<endl;
+}
+
+int ca::particleNo(vector< vector<int> > & grid){
+  int sum = 0;
+  for(vector<vector<int> >::iterator it = grid.begin(); it != grid.end(); ++it){
+    for(vector<int>::iterator jt = (*it).begin(); jt != (*it).end(); ++jt){
+      if((*jt) != 0){
+	sum++;
+      }
+    }
+  }
+  return sum;
 }

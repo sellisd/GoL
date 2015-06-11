@@ -9,9 +9,10 @@
 #include "lg.h"
 #include "ca.h"
 #include "entropy.h"
+#include "cani.h"
 #include <limits>
 
-//g++  -Wall -o run main.cpp entropy.cpp gol.cpp lg.cpp ca.cpp randomv.cpp lodepng.cpp -lgsl -lgslcblas
+//g++  -Wall -o run main.cpp entropy.cpp gol.cpp lg.cpp ca.cpp cani.cpp randomv.cpp lodepng.cpp -lgsl -lgslcblas
 using namespace std;
 
 int main(int argc, char* argv[]){
@@ -91,7 +92,7 @@ Lattice Gas
       vector<double> es;
       entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
       for(unsigned int i = 0; i<ws.size(); ++i){
-	cout<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+	cout<<i<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       break;
     }
@@ -116,10 +117,10 @@ Lattice Gas
       break;
     }
     case 4:{        // non-interacting coffee automaton
-      ca cappuccino(x);
-      cappuccino.setInteracting(false);
-      cappuccino.populateRegion(r,25,.9);
-      cappuccino.run(Tmax,r, wout, vout, entropyFunctions, by);      
+      cani late(x);
+      late.populateRegion(r,25,.9);
+      vector<vector<int> > grid;
+      late.run(Tmax,r, wout, vout, entropyFunctions, by);      
       break;
     }
     default:

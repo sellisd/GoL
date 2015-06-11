@@ -1,5 +1,5 @@
-#ifndef CA_H
-#define CA_H
+#ifndef CANI_H
+#define CANI_H
 #include <vector>
 #include <fstream>
 #include "randomv.h"
@@ -8,27 +8,24 @@
 using namespace std;
 
 /**
- * Interactng coffee automaton
+ * Non-interacting coffee automaton
  */
 
-class ca{
+class cani{
  public:
-  ca(void);
-  ca(int side);
-  int getSide(void)  { return side; }
-  void setSide(int a) { side = a; }
+  cani(void);
+  cani(int side);
   void prepare(void); //initialize
-  void set(int i, int j, int value);
-  int get(int i, int j);
   void populateRegion(randomv & r, int a, double p);
   void step(randomv &r);
   void run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by);
-  int swap(int x1, int y1, int x2, int y2);
   void printV(int t, ostream & vout);
-  int  particleNo(vector< vector<int> > & grid);
+  void move(int i, int x2, int y2);
+  void makeGrid(vector<vector<int> > & grid);
  private:
   int side;
-  vector< vector<int> > grid;
-  int generation;
+  int N; //number of praticles
+  vector<int> x; //coordinates
+  vector<int> y;
 };
 #endif
