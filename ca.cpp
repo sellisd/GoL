@@ -37,8 +37,10 @@ void ca::set(int i, int j, int value){
 }
 
 int ca::get(int i, int j){
-  i = abs(i % side);
-  j = abs(j % side);
+  i = i % side;
+  j = j % side;
+  if(i<0){i += side;}
+  if(j<0){j += side;}
   return grid.at(i).at(j);
 }
 
@@ -82,7 +84,7 @@ void ca::step(randomv &r){
       exit(1);
     }
     if(this->swap(x1,y1, x2,y2)){
-      success = true;
+    success = true;
     }
   }
 }
@@ -101,7 +103,6 @@ void ca::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy & en
 	wout<<t<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       this->printV(t, vout);
-      cerr<<this->particleNo(grid)<<endl;
     }
     this->step(r);
   }
@@ -111,7 +112,7 @@ int ca::swap(int x1,int y1, int x2, int y2){
   int a = this->get(x1,y1);
   int b = this->get(x2,y2);
   if(a != b){
-    this->set(x1,y1, b);
+    this->set(x1,y1,b);
     this->set(x2,y2,a);
     return 1;
   }else{

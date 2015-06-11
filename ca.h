@@ -30,5 +30,6 @@ class ca{
   int side;
   vector< vector<int> > grid;
   int generation;
+  int pN;
 };
 #endif

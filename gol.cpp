@@ -40,8 +40,10 @@ void gol::set(int i, int j, int value){
 }
 
 int gol::get(int i, int j){
-  i = abs(i % x);
-  j = abs(j % y);
+  i = i % x;
+  j = j % y;
+  if(i<0){i += x;}
+  if(j<0){j += y;}
   return m.at(i).at(j);
 }
   
