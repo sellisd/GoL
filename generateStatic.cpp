@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "randomv.h"
 #include "generateStatic.h"
 using namespace std;
@@ -23,6 +24,25 @@ void generateStatic::gradient(vector<vector<int> > & grid, randomv & r){
   }
 }
  
+void generateStatic::filled(vector<vector<int> > & grid){
+  for (int i = 0; i < side; ++i){
+    for(int j = 0; j < side; ++j){
+        grid.at(i).at(j) = 1;
+    }
+  }
+}
+ 
+ void generateStatic::square(vector<vector<int> > & grid, int window, double p, randomv &r){
+   for( int i = (side-window)/2; i <(side-window)/2+window; i++){
+    for(int j = (side-window)/2; j <(side-window)/2+window; j++){
+      if(r.sampleUniform()<p){
+        grid.at(i).at(j) = 1;
+      }else{
+        grid.at(i).at(j) = 0;
+      }
+    }
+  }
+}
 
 void generateStatic::SierpinskiCarpet(vector<vector<int> >& grid){
   //side of the grid should be 3^n for a full centered carpet
@@ -64,4 +84,13 @@ void generateStatic::printMatrix(vector<vector<int> > & grid){
     cout<<endl;
   }
   cout<<endl;
+}
+
+void generateStatic::printV(vector<vector<int> > &grid, ofstream & vout){
+ for(vector<vector<int> >::iterator it = grid.begin(); it != grid.end(); ++it){
+    for(vector<int>::iterator jt = (*it).begin(); jt != (*it).end(); ++jt){
+      vout<<(*jt);
+    }
+  }
+  vout<<endl;
 }

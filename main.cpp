@@ -93,8 +93,9 @@ Lattice Gas
       vector<double> es;
       entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
       for(unsigned int i = 0; i<ws.size(); ++i){
-	wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+        wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
+      tables.printV(grid, vout);
       break;
     }
     case 1:{         // HPP Lattice Gass
@@ -135,7 +136,10 @@ Lattice Gas
       }
       // initialize static library
       generateStatic tables(x);
-      //    tables.printMatrix(grid);
+      tables.SierpinskiCarpet(grid);
+      //tables.square(grid, 512, 1, r);
+//tables.filled(grid);
+      //tables.printMatrix(grid);
       vector<int> ws;
       vector<int> ss;
       vector<double> k1s;
@@ -143,8 +147,9 @@ Lattice Gas
       vector<double> es;
       entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
       for(unsigned int i = 0; i<ws.size(); ++i){
-	wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+      	wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
+      tables.printV(grid, vout);
       break;
     }default:
       exit(1);

@@ -177,8 +177,8 @@ void lg::printV(int t, ostream & vout){
       int particleNo = 0;
       for(int z = 0; z < 4; z++){
       	if (lattice.at(x).at(y).at(z) == 1){
-	  particleNo++;
-	}
+    	    particleNo++;
+        }
       }
       vout<<particleNo;
     }
