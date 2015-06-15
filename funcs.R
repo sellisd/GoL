@@ -77,13 +77,56 @@ evolutionStats <- function(wdat){
     }
     generationCounter <- generationCounter + 1
   }  
-  list("Hmedian"  = mm.H,
-       "Hlower"   = ml.H,
-       "Hupper"   = mu.H,
-       "K1median" = mm.K1,
-       "K1lower"  = ml.K1,
-       "K1upper"  = mu.K1,
-       "K2median" = mm.K2,
-       "K2lower"  = ml.K2,
-       "K2upper"  = mu.K2)
+  list("generations" = generations,
+       "Hmedian"     = mm.H,
+       "Hlower"      = ml.H,
+       "Hupper"      = mu.H,
+       "K1median"    = mm.K1,
+       "K1lower"     = ml.K1,
+       "K1upper"     = mu.K1,
+       "K2median"    = mm.K2,
+       "K2lower"     = ml.K2,
+       "K2upper"     = mu.K2)
+}
+
+
+# Plotting functions for plots often used
+plotScalc <- function(wout){
+  # plot S for static structures (0 generations)
+  N <- log(wout$V3,base=10)
+  w <- log(1/wout$V2,base=10)
+  Lfit <- goodFit(w,N,minXpoints = 4, r2 = 0.9)
+  plot(w,N,xlab="log2(1/w)", ylab="log2(N(S))",pch=19)
+  m <- min(w[Lfit$index])
+  M <- max(w[Lfit$index])
+  segments(m,m*Lfit$slope+Lfit$intercept,M,M*Lfit$slope+Lfit$intercept)
+  l <- sprintf("%2.2f",Lfit$slope)
+  p <- sprintf("%2.2e",Lfit$p.value)
+  r <- sprintf("%2.2e",Lfit$r2)
+  legend("topleft", paste("slope: ",l,", p. value: ",p,", r^2: ", r, sep=""))
+}
+
+
+plotSTcalc <- function(wout){
+  # plot S vs time
+  generations <- unique(wout$V1)
+  windows <- unique(wout$V2)
+  generationCounter <- 1
+  D <- vector()
+  DSE <- vector()
+  Dr2 <- vector()
+  counter <- 1
+  for(g in generations){
+    N <- log(wout$V3[wout$V1==g],base=10)
+    w <- log(1/wout$V2[wout$V1==g],base=10)
+    Lfit <- goodFit(w,N,minXpoints = 4, r2 = 0.9)
+    D[counter]   <- Lfit$slope
+    DSE[counter] <- Lfit$se
+    Dr2[counter] <- Lfit$r2
+    counter <- counter + 1
+  }
+  data.frame("generations" = generations,
+             "D"          = D,
+             "DSE"        = DSE,
+             "Dr2"        = Dr2)
 }

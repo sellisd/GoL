@@ -43,6 +43,7 @@ Lattice Gas
 3:     Coffee automaton interacting
 4:     Coffee automaton non-interacting
 5:     Sierpinski's Carpet
+6:     square
    */
   int x;
   int model;
@@ -128,17 +129,17 @@ Lattice Gas
       //initialize grid
       vector<vector<int> > grid;
       for (int i = 0; i < x; i++){
-	vector<int> row;
-	for(int j = 0; j<y; j++){
-	  row.push_back(0);
-	}
-	grid.push_back(row);
+        vector<int> row;
+	      for(int j = 0; j<y; j++){
+	        row.push_back(0);
+	      }
+	      grid.push_back(row);
       }
       // initialize static library
       generateStatic tables(x);
       tables.SierpinskiCarpet(grid);
       //tables.square(grid, 512, 1, r);
-//tables.filled(grid);
+      //tables.filled(grid);
       //tables.printMatrix(grid);
       vector<int> ws;
       vector<int> ss;
@@ -148,6 +149,28 @@ Lattice Gas
       entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
       for(unsigned int i = 0; i<ws.size(); ++i){
       	wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+      }
+      tables.printV(grid, vout);
+      break;
+    }case 6:{         // Square
+      vector<vector<int> > grid;
+      for (int i = 0; i < x; i++){
+        vector<int> row;
+        for(int j = 0; j<y; j++){
+          row.push_back(0);
+        }
+        grid.push_back(row);
+      }
+      generateStatic tables(x);
+      tables.square(grid, 32, 1, r);
+      vector<int> ws;
+      vector<int> ss;
+      vector<double> k1s;
+      vector<double> k2s;
+      vector<double> es;
+      entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
+      for(unsigned int i = 0; i<ws.size(); ++i){
+        wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       tables.printV(grid, vout);
       break;
