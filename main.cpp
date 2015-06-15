@@ -16,27 +16,12 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-  //  int value = 255*255; //[1
-  //  int div = ceil(double(value)/255.);
-  //  cerr<<div<<' '<<value-255*(div-1)<<endl;
-  //  exit(0);
+
 /*
 command line parameters:
 side model replicates Tmax by
 
-examples: 
-single generation gradient:
-./run 64 0 1 1 1 gradient.w.dat gradient.v.dat
-Non-interacting ca
-./run 64 4 100 1000 10 caNI.w.dat caNI.v.dat
-Interacting ca
-./run 64 3 100 10000 100 caI.w.dat caI.v.dat
-Game of Life
-./run 64 2 100 1000 10 gol.w.dat gol.v.dat
-Lattice Gas
-./run 64 1 100 1 lg.w.dat lg.v.dat
-*/
-  /*Options
+Options
 0:     Gradient
 1:     HPP Lattice Gas
 2:     Game of Life
@@ -65,6 +50,11 @@ Lattice Gas
     cerr<<"side model replicates Tmax by window vector"<<endl;
     exit(1);
   }
+
+  // Initial state variables
+  int squareSide = 32;
+  double squareFillingProb = 0.9;
+
   int y = x;
   entropy entropyFunctions(x,y);
   ofstream wout;
@@ -102,25 +92,25 @@ Lattice Gas
     case 1:{         // HPP Lattice Gass
       lg he(x);
       he.setIgnoreCollisions(true);
-      he.initRegion(r,25,.9);
+      he.initRegion(r,squareSide,squareFillingProb);
       he.run(Tmax, wout, vout, entropyFunctions, by);
       break;
     }
     case 2:{         // Game of Life  
       gol sim(x,y);
-      sim.populateRegion(r,25,0.9);
+      sim.populateRegion(r,squareSide,squareFillingProb);
       sim.run(Tmax,r,wout,vout,entropyFunctions, by);
       break;
     }
     case 3:{        // interacting coffee automaton
       ca cappuccino(x);
-      cappuccino.populateRegion(r,25,.9);
+      cappuccino.populateRegion(r,squareSide,squareFillingProb);
       cappuccino.run(Tmax,r, wout, vout, entropyFunctions, by);
       break;
     }
     case 4:{        // non-interacting coffee automaton
       cani late(x);
-      late.populateRegion(r,25,.9);
+      late.populateRegion(r,squareSide,squareFillingProb);
       vector<vector<int> > grid;
       late.run(Tmax,r, wout, vout, entropyFunctions, by);      
       break;
@@ -138,9 +128,6 @@ Lattice Gas
       // initialize static library
       generateStatic tables(x);
       tables.SierpinskiCarpet(grid);
-      //tables.square(grid, 512, 1, r);
-      //tables.filled(grid);
-      //tables.printMatrix(grid);
       vector<int> ws;
       vector<int> ss;
       vector<double> k1s;
@@ -162,7 +149,7 @@ Lattice Gas
         grid.push_back(row);
       }
       generateStatic tables(x);
-      tables.square(grid, 32, 1, r);
+      tables.square(grid,squareSide,squareFillingProb, r);
       vector<int> ws;
       vector<int> ss;
       vector<double> k1s;
