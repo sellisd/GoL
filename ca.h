@@ -27,8 +27,8 @@ class ca{
   void printV(int t, ostream & vout);
   int  particleNo(vector< vector<int> > & grid);
  private:
-  int side;
-  vector< vector<int> > grid;
+  int side; //! size of grid
+  vector< vector<int> > grid; //! The world grid
   int generation;
 };
 #endif
