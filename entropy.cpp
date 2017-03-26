@@ -145,6 +145,10 @@ double entropy::compressPNG(vector<int> & vectorS, unsigned int width){
     }
   }
   vector<unsigned char> compressed;
+  //lodepng::State state;
+  //LodePNGFilterStrategy filter = LFS_ZERO;
+  //state.encoder.filter_strategy = filter;
+  //unsigned error = lodepng::encode(compressed,uncompressed, width, width, state);
   unsigned error = lodepng::encode(compressed,uncompressed, width, width);
   double compSize = -1;
   if(!error){
