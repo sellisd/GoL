@@ -73,7 +73,8 @@ void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, 
 }
 
 void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector<int> > & grid){
-  //non overlapping windows without error check, x and y should be powers of 2
+  // non overlapping windows without error check, x and y should be powers of 2
+  // window is the window size
   for(int I = 0; I < x; I+=window){
     for(int J = 0; J < y; J+=window){
       int sum = 0;

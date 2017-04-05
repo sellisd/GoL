@@ -194,3 +194,31 @@ coarseGrain <- function(window, gridM){
   }
   coarseGrained
 }
+
+#' Plot an image of the model at time t
+#'
+#' @param vectorFile
+#' 
+#' @param t  time
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plotState <- function(vectorFile, model, side, t){
+  typeV = ""
+  if (model =="gol"){
+    typeV= "vector"
+  }else if (model == "lg"){
+    typeV = "string"
+  }else if (model == "ca"){
+    typeV = "string"
+  }else if (model == "cani"){
+    typeV = "vector"
+  }else{
+    warning("Unknown model")
+  }
+  a <- read.table(vectorFile)
+  
+  vector2matrix(vectorS = vector, type = typeV, side = side)
+}

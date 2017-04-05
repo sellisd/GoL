@@ -1,7 +1,7 @@
 #Power analysis for entropy estimation
 library(entropy)
 # window side cells replicates
-side <- c(2,4,8,16,32,64)
+side <- c(1,2,4,8,16,32,64)
 df <- data.frame(side=side, stringLength = side^2, stringNo = 64^2/side^2)
 eMLDF       <- data.frame(side=side,lower=NA,median=NA,upper=NA)
 eMMDF       <- data.frame(side=side,lower=NA,median=NA,upper=NA)

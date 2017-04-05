@@ -13,6 +13,8 @@ using namespace std;
  */
 class gameOfLife : public system{
  public:
+  gameOfLife(void);
+  gameOfLife(int side){};
   int sumN(int i, int j);
   void applyRules(randomv &r);
  private:

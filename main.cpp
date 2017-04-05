@@ -5,14 +5,13 @@
 #include <map>
 #include <math.h>
 #include "randomv.h"
-#include "gol.h"
-#include "lg.h"
-#include "ca.h"
+#include "gameOfLife.h"
+//#include "lg.h"
+//#include "ca.h"
 #include "entropy.h"
-#include "cani.h"
+//#include "cani.h"
 #include "generateStatic.h"
 
-//g++  -Wall -o run main.cpp entropy.cpp gol.cpp lg.cpp ca.cpp cani.cpp generateStatic.cpp randomv.cpp lodepng.cpp -lgsl -lgslcblas
 using namespace std;
 
 int main(int argc, char* argv[]){
@@ -47,23 +46,23 @@ Options
     vfileS     = argv[7];
   }else{
     cerr<<"command line parameters:"<<endl;
-    cerr<<"side model replicates Tmax by window vector"<<endl;
+    cerr<<"side model replicates Tmax by woutFileName voutFileName"<<endl;
     exit(1);
   }
-
   // Initial state variables
-  int squareSide = 32;
+  int squareSide = 64;
   double squareFillingProb = 0.9;
-
-  int y = x;
-  entropy entropyFunctions(x,y);
+  gameOfLife g(squareSide);
+  entropy entropyFunctions(squareSide, squareSide);
+  g.gridInit();
   ofstream wout;
   ofstream vout;
   wout.open (wfileS, std::ofstream::out);
   vout.open (vfileS, std::ofstream::out);
   randomv r;
+  g.run(100, r, wout, vout, entropyFunctions, by);
   for (int replicate = 0; replicate < replicates; replicate++){
-    switch(model){
+  /*  switch(model){
     case 0:{          // Smooth gradient
       //initialize grid
       vector<vector<int> > grid;
@@ -96,7 +95,7 @@ Options
       he.run(Tmax, wout, vout, entropyFunctions, by);
       break;
     }
-    case 2:{         // Game of Life  
+    case 2:{         // Game of Life
       gol sim(x,y);
       sim.populateRegion(r,squareSide,squareFillingProb);
       sim.run(Tmax,r,wout,vout,entropyFunctions, by);
@@ -112,7 +111,7 @@ Options
       cani late(x);
       late.populateRegion(r,squareSide,squareFillingProb);
       vector<vector<int> > grid;
-      late.run(Tmax,r, wout, vout, entropyFunctions, by);      
+      late.run(Tmax,r, wout, vout, entropyFunctions, by);
       break;
     }
     case 5:{         // Sierinski's carpet
@@ -164,6 +163,7 @@ Options
     }default:
       exit(1);
     }
+    */
   }
   return EXIT_SUCCESS;
 }
