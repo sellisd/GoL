@@ -7,7 +7,7 @@
 #include "randomv.h"
 #include "gameOfLife.h"
 //#include "lg.h"
-//#include "ca.h"
+#include "ca.h"
 #include "entropy.h"
 //#include "cani.h"
 #include "generateStatic.h"
@@ -51,18 +51,15 @@ Options
   }
   // Initial state variables
   double squareFillingProb = 0.9;
-  gameOfLife g(x);
   entropy entropyFunctions(x, x);
   ofstream wout;
   ofstream vout;
   wout.open (wfileS, std::ofstream::out);
   vout.open (vfileS, std::ofstream::out);
   randomv r;
-  g.fillSquare(r, x/2, squareFillingProb);
-  g.run(Tmax, r, wout, vout, entropyFunctions, by);
   for (int replicate = 0; replicate < replicates; replicate++){
-  /*  switch(model){
-    case 0:{          // Smooth gradient
+  switch(model){
+  /*  case 0:{          // Smooth gradient
       //initialize grid
       vector<vector<int> > grid;
       for (int i = 0; i < x; i++){
@@ -93,20 +90,20 @@ Options
       he.initRegion(r,squareSide,squareFillingProb);
       he.run(Tmax, wout, vout, entropyFunctions, by);
       break;
-    }
+    }*/
     case 2:{         // Game of Life
-      gol sim(x,y);
-      sim.populateRegion(r,squareSide,squareFillingProb);
-      sim.run(Tmax,r,wout,vout,entropyFunctions, by);
+      gameOfLife g(x);
+      g.fillSquare(r, x/2, squareFillingProb);
+      g.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;
     }
     case 3:{        // interacting coffee automaton
       ca cappuccino(x);
-      cappuccino.populateRegion(r,squareSide,squareFillingProb);
-      cappuccino.run(Tmax,r, wout, vout, entropyFunctions, by);
+      cappuccino.fillSquare(r, x/2, squareFillingProb);
+      cappuccino.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;
-    }
-    case 4:{        // non-interacting coffee automaton
+    }}
+    /*case 4:{        // non-interacting coffee automaton
       cani late(x);
       late.populateRegion(r,squareSide,squareFillingProb);
       vector<vector<int> > grid;
@@ -161,8 +158,7 @@ Options
       break;
     }default:
       exit(1);
-    }
-    */
+    }*/
   }
   return EXIT_SUCCESS;
 }

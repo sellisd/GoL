@@ -54,12 +54,10 @@ void system::fillSquare(randomv & r, int window, double p){
 }
 
 void system::tick(){
-  cout<<"in system::tick"<<endl;
   generation++;
 }
 
 void system::step(randomv &r){
-  cout<<"in system::step"<<endl;
   tick();
 }
 

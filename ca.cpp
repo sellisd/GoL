@@ -4,6 +4,7 @@
 #include "ca.h"
 #include "randomv.h"
 #include "entropy.h"
+#include "system.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ void ca::step(randomv &r){
 //   else pick another and repeat
   bool success = false;
   while (success != true) {
-    int x1 = r.sampleUniformInt(this->system::getSide());
+    int x1 = r.sampleUniformInt(system::getSide());
     int y1 = r.sampleUniformInt(system::getSide());
     int neighbor = r.sampleUniformInt(4); // 0 1 2 3 = b l u r
     int x2=x1;
@@ -40,7 +41,7 @@ void ca::step(randomv &r){
       success = true;
     }
   }
-  system::step(randomv &r);
+  system::step(r);
 }
 
 int ca::swap(int x1,int y1, int x2, int y2){

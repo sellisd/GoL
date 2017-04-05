@@ -17,6 +17,5 @@ class gameOfLife : public system{
   gameOfLife(int side){};
   int sumN(int i, int j);
   void step(randomv &r);
- private:
 };
 #endif
