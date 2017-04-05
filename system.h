@@ -21,11 +21,10 @@ public:
   void tick();
   void gridInit(void); //! initialize system world
   void fillSquare(randomv &r, int a, double p);
-  void applyRules(randomv &r);
   void run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by);
   void printV(int t, ostream & vout);
   void makeGrid(vector<vector<int> > & grid);
-  void step(randomv &r);
+  virtual void step(randomv &r);
  private:
   int side;
   vector<vector<int> > grid; //! The world grid

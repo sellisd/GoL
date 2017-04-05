@@ -139,33 +139,22 @@ plotSTcalc <- function(wout){
 }
 
 
-library(seqinr) #s2c
-
 #' Vector to matrix format transformation.
 #' 
 #' Given a vector the space matrix is returned
 #'
 #' @param vectorS numerical or character vector
 #' @param side    size of square
-#' @param type    ["string"|"vector"] of integers
 #'
 #' @return side x side numeric matrix
 #' @export
 #'
 #' @examples:
 #' a <- read.table("~/projects/GoL/caNI100.v.dat", nrows = 100)
-#' image(vector2matrix(v=as.vector(unlist(a[14,c(2:length(a))])), side = 64,type = "vector"))
-vector2matrix <- function(vectorS, type, side){
-  if (type == "string"){
-    vectorS <- as.numeric(s2c(vectorS))
-  }else if (type == "vector"){
-    # pass
-  }else{
-    warning(paste("Unknown type", type))
-  }
+#' image(vector2matrix(v=as.vector(unlist(a[14,c(2:length(a))])), side = 64))
+vector2matrix <- function(vectorS, side){
   matrix(vectorS, nrow = side, byrow = TRUE)
 }
-
 
 #' Coarse Grain matrix.
 #'
@@ -205,20 +194,7 @@ coarseGrain <- function(window, gridM){
 #' @export
 #'
 #' @examples
-plotState <- function(vectorFile, model, side, t){
-  typeV = ""
-  if (model =="gol"){
-    typeV= "vector"
-  }else if (model == "lg"){
-    typeV = "string"
-  }else if (model == "ca"){
-    typeV = "string"
-  }else if (model == "cani"){
-    typeV = "vector"
-  }else{
-    warning("Unknown model")
-  }
+plotState <- function(vectorFile, side, t){
   a <- read.table(vectorFile)
-  
-  vector2matrix(vectorS = vector, type = typeV, side = side)
+  image(vector2matrix(vectorS = as.vector(unlist(a[t, c(2:length(a))])), side = side))
 }

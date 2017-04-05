@@ -50,17 +50,16 @@ Options
     exit(1);
   }
   // Initial state variables
-  int squareSide = 64;
   double squareFillingProb = 0.9;
-  gameOfLife g(squareSide);
-  entropy entropyFunctions(squareSide, squareSide);
-  g.gridInit();
+  gameOfLife g(x);
+  entropy entropyFunctions(x, x);
   ofstream wout;
   ofstream vout;
   wout.open (wfileS, std::ofstream::out);
   vout.open (vfileS, std::ofstream::out);
   randomv r;
-  g.run(100, r, wout, vout, entropyFunctions, by);
+  g.fillSquare(r, x/2, squareFillingProb);
+  g.run(Tmax, r, wout, vout, entropyFunctions, by);
   for (int replicate = 0; replicate < replicates; replicate++){
   /*  switch(model){
     case 0:{          // Smooth gradient

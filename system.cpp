@@ -54,15 +54,13 @@ void system::fillSquare(randomv & r, int window, double p){
 }
 
 void system::tick(){
+  cout<<"in system::tick"<<endl;
   generation++;
 }
 
 void system::step(randomv &r){
-  this->tick();
-}
-
-void system::applyRules(randomv &r){
-  //apply rules
+  cout<<"in system::step"<<endl;
+  tick();
 }
 
 void system::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
@@ -78,9 +76,9 @@ void system::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy 
       for(unsigned int i = 0; i<ws.size(); ++i){
 	       wout<<t<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
-      this->printV(t, vout);
+      printV(t, vout);
     }
-    this->step(r);
+    step(r);
   }
 }
 
