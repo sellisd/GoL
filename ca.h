@@ -9,14 +9,16 @@
 using namespace std;
 
 /**
- * Interactng coffee automaton
+ * Coffee automaton
  */
 
 class ca : public system{
   public:
     ca(void);
-    ca(int side){};
+    ca(int side, bool x){ interacting = x; };
     void step(randomv &r); //! Extend base class step
     int  swap(int x1, int y1, int x2, int y2);
+  private:
+    bool interacting;
 };
 #endif

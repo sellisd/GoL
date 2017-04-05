@@ -9,7 +9,6 @@
 //#include "lg.h"
 #include "ca.h"
 #include "entropy.h"
-//#include "cani.h"
 #include "generateStatic.h"
 
 using namespace std;
@@ -98,18 +97,17 @@ Options
       break;
     }
     case 3:{        // interacting coffee automaton
-      ca cappuccino(x);
+      ca cappuccino(x, true);
       cappuccino.fillSquare(r, x/2, squareFillingProb);
       cappuccino.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;
-    }}
-    /*case 4:{        // non-interacting coffee automaton
-      cani late(x);
-      late.populateRegion(r,squareSide,squareFillingProb);
-      vector<vector<int> > grid;
-      late.run(Tmax,r, wout, vout, entropyFunctions, by);
-      break;
     }
+    case 4:{        // non-interacting coffee automaton
+      ca late(x, false);
+      late.fillSquare(r, x/2, squareFillingProb);
+      late.run(Tmax, r, wout, vout, entropyFunctions, by);
+      break;
+    }}/*
     case 5:{         // Sierinski's carpet
       //initialize grid
       vector<vector<int> > grid;
