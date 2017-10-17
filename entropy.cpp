@@ -66,10 +66,17 @@ void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, 
     this->hist(histogram, cg);
     double H = this->infEntropy(histogram);
     es.push_back(H);
-    // pair<double,double> entrCompl(H,K);
-    // pair<int,pair<double,double> > we(window,entrCompl);
-    // p.insert(we);
   }
+  //calculate K1 for the top left corner of width = 8
+  vector<int> corner;
+  int cornerWidth = 8;
+  for(int I = 0; I < w; I++){
+    for(int J = 0; J < w; J++){
+      corner.push_back(grid.at(I).at(J));
+    }
+  }
+  double cK = compressPNG(corner, cornerWidth);
+  cout<<t<<"\t"<<cK<<endl;
 }
 
 void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector<int> > & grid){

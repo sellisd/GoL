@@ -43,11 +43,15 @@ int system::get(int i, int j){
   return grid.at(i).at(j);
 }
 
+int system::randomState(void){
+  return(1);
+}
+
 void system::fillSquare(randomv & r, int window, double p){
   for( int i = (side-window)/2; i <(side-window)/2+window; i++){
     for(int j = (side-window)/2; j <(side-window)/2+window; j++){
       if(r.sampleUniform()<p){
-        this->set(i, j, 1);
+        this->set(i, j, randomState());
       }
     }
   }

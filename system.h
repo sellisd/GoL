@@ -25,6 +25,7 @@ public:
   void printV(int t, ostream & vout);
   void makeGrid(vector<vector<int> > & grid);
   virtual void step(randomv &r);
+  virtual int randomState(); //! Return a random non-zero state of the cell
  private:
   int side;
   vector<vector<int> > grid; //! The world grid

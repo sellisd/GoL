@@ -93,15 +93,16 @@ evolutionStats <- function(wdat){
 #' Plot box counting dimension regression
 #'
 #' @param wout 
+#' @param generation
 #'
 #' @return
 #' @export
 #'
 #' @examples
-plotScalc <- function(wout){
+plotScalc <- function(wout, generation = 0){
   # plot S for static structures (0 generations)
-  N <- log(wout$V3,base=10)
-  w <- log(1/wout$V2,base=10)
+  N <- log(wout$V3[wout$V1 == generation],base=10)
+  w <- log(1/wout$V2[wout$V1 == generation],base=10)
   Lfit <- goodFit(w,N,minXpoints = 4, r2 = 0.9)
   plot(w,N,xlab="log2(1/w)", ylab="log2(N(S))",pch=19)
   m <- min(w[Lfit$index])
@@ -114,8 +115,15 @@ plotScalc <- function(wout){
 }
 
 
+#' Plot S vs time
+#'
+#' @param wout 
+#'
+#' @return data frame
+#' @export
+#'
+#' @examples
 plotSTcalc <- function(wout){
-  # plot S vs time
   generations <- unique(wout$V1)
   windows <- unique(wout$V2)
   generationCounter <- 1
@@ -161,7 +169,7 @@ vector2matrix <- function(vectorS, side){
 #' @param window int : size of non-overlapping windows for coarse grainning
 #' @param gridM matrix: matrix
 #'
-#' @return coarse grained matrix with summs 
+#' @return coarse grained matrix with sums 
 #' @export
 #'
 #' @examples
@@ -186,15 +194,68 @@ coarseGrain <- function(window, gridM){
 
 #' Plot an image of the model at time t
 #'
-#' @param vectorFile
-#' 
-#' @param t  time
+#' @param vectorFile string Path and file name
+#' @param t          int    Time           
+#' @param side       int    Side of grid
+#' @param ...               options passed to plotState
 #'
 #' @return
 #' @export
 #'
 #' @examples
-plotState <- function(vectorFile, side, t){
-  a <- read.table(vectorFile)
-  image(vector2matrix(vectorS = as.vector(unlist(a[t, c(2:length(a))])), side = side))
+plotStateF <- function(vectorFile, side, t, ...){
+  a <- read.table(vectorFile, stringsAsFactors = FALSE)
+  plotState(vectorFrame = a, side=side, t=t, ...)
+}
+
+#' Plot an image of the model at time t
+#'
+#' @param t  time
+#' @param side 
+#' @param vectorFrame data.frame 
+#' @param ... options passed to image
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plotState <- function(vectorFrame, side, t, ...){
+  image(vector2matrix(vectorS = as.vector(unlist(vectorFrame[which(vectorFrame[,1] == t), c(2:length(vectorFrame))])), side = side), ...)
+}
+
+#' Plot coarse grained world. 
+#' 
+#' Creates a series of plots with a graphical representation of the coarse grained environment
+#'
+#' @param vectorFrame 
+#' @param side 
+#' @param t 
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plotCoarseGrain <- function(vectorFrame, side, t, ...){
+  m <- vector2matrix(vectorS = as.vector(unlist(vectorFrame[which(vectorFrame[,1] == t), c(2:length(vectorFrame))])), side = side)
+  for(cgWindow in c(2, 4, 8, 16, 32, 64)){
+    cgSize <- side/cgWindow
+    cg2 <- coarseGrain(cgWindow, m)
+    cg2m <- vector2matrix(v = cg2, side = cgSize)
+    #make matrix again with appropriate dimensions
+    plotStateFromVector(cg2m, side = cgSize, ...)
+    legend("topright", legend = cgWindow)
+  }
+}
+
+#' Plot an image of the model from a vector
+#' @param side
+#' @param vectorFrame data.frame
+#' @param ... options passed to image
+#' @return
+#' @export
+#'
+#' @examples
+plotStateFromVector <- function(vectorFrame, side, ...){
+  image(vector2matrix(vectorS = as.vector(unlist(vectorFrame)), side = side), ...)
 }

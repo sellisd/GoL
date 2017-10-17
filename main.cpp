@@ -50,6 +50,7 @@ Options
   }
   // Initial state variables
   double squareFillingProb = 0.9;
+  int squareSide = x/2;
   entropy entropyFunctions(x, x);
   ofstream wout;
   ofstream vout;
@@ -58,62 +59,64 @@ Options
   randomv r;
   for (int replicate = 0; replicate < replicates; replicate++){
   switch(model){
-  /*  case 0:{          // Smooth gradient
-      //initialize grid
-      vector<vector<int> > grid;
-      for (int i = 0; i < x; i++){
-	vector<int> row;
-	for(int j = 0; j<y; j++){
-	    row.push_back(0);
-	}
-	grid.push_back(row);
-      }
-      // initialize static library
-      generateStatic tables(x);
-      tables.gradient(grid,r);
-      vector<int> ws;
-      vector<int> ss;
-      vector<double> k1s;
-      vector<double> k2s;
-      vector<double> es;
-      entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
-      for(unsigned int i = 0; i<ws.size(); ++i){
-        wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
-      }
-      tables.printV(grid, vout);
-      break;
+  case 0:{          // Smooth gradient
+    //initialize grid
+    vector<vector<int> > grid;
+    for (int i = 0; i < x; i++){
+      vector<int> row;
+	    for(int j = 0; j<x; j++){
+        row.push_back(0);
+	    }
+	    grid.push_back(row);
     }
-    case 1:{         // HPP Lattice Gass
+    // initialize static library
+    generateStatic tables(x);
+    tables.gradient(grid,r);
+    vector<int> ws;
+    vector<int> ss;
+    vector<double> k1s;
+    vector<double> k2s;
+    vector<double> es;
+    entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
+    for(unsigned int i = 0; i<ws.size(); ++i){
+      wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+    }
+    tables.printV(grid, vout);
+    break;
+    }
+/*    case 1:{         // HPP Lattice Gass
       lg he(x);
       he.setIgnoreCollisions(true);
-      he.initRegion(r,squareSide,squareFillingProb);
-      he.run(Tmax, wout, vout, entropyFunctions, by);
+      g.fillSquare(r, x/2, squareFillingProb);
+      g.run(Tmax, r, wout, vout, entropyFunctions, by);
+      //he.initRegion(r,squareSide,squareFillingProb);
+      //he.run(Tmax, wout, vout, entropyFunctions, by);
       break;
     }*/
     case 2:{         // Game of Life
       gameOfLife g(x);
-      g.fillSquare(r, x/2, squareFillingProb);
+      g.fillSquare(r, squareSide, squareFillingProb);
       g.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;
     }
     case 3:{        // interacting coffee automaton
       ca cappuccino(x, true);
-      cappuccino.fillSquare(r, x/2, squareFillingProb);
+      cappuccino.fillSquare(r, squareSide, squareFillingProb);
       cappuccino.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;
     }
     case 4:{        // non-interacting coffee automaton
       ca late(x, false);
-      late.fillSquare(r, x/2, squareFillingProb);
+      late.fillSquare(r, squareSide, squareFillingProb);
       late.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;
-    }}/*
+    }
     case 5:{         // Sierinski's carpet
       //initialize grid
       vector<vector<int> > grid;
       for (int i = 0; i < x; i++){
         vector<int> row;
-	      for(int j = 0; j<y; j++){
+	      for(int j = 0; j<x; j++){
 	        row.push_back(0);
 	      }
 	      grid.push_back(row);
@@ -136,7 +139,7 @@ Options
       vector<vector<int> > grid;
       for (int i = 0; i < x; i++){
         vector<int> row;
-        for(int j = 0; j<y; j++){
+        for(int j = 0; j<x; j++){
           row.push_back(0);
         }
         grid.push_back(row);
@@ -156,7 +159,7 @@ Options
       break;
     }default:
       exit(1);
-    }*/
+    }
   }
   return EXIT_SUCCESS;
 }
