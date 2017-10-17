@@ -17,7 +17,7 @@ class entropy{
   double compress(vector<int> & vectorS);
   double compressPNG(vector<int> & vectorS, unsigned int window);
   int    boxCount(vector<int> & vectorS);
-  double cornerComplexity(vector<vector<int> > & grid, int cornerWidth /*= 8*/);
+  pair<double,double> cornerComplexity(vector<vector<int> > & grid, int cornerWidth /*= 8*/);
  private:
   int x;
   int y;

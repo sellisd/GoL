@@ -69,16 +69,27 @@ void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, 
   }
 }
 
-double entropy::cornerComplexity(vector<vector<int> > & grid, int cornerWidth = 8){
+pair<double, double> entropy::cornerComplexity(vector<vector<int> > & grid, int cornerWidth = 8){
   //Calculate complexity of top left square corner with width w
   //calculate K1 for the top left corner of width = 8
-  vector<int> corner;
+  vector<int> cornerTopLeft;
+  vector<int> cornerBottomRight;
   for(int I = 0; I < cornerWidth; I++){
     for(int J = 0; J < cornerWidth; J++){
-      corner.push_back(grid.at(I).at(J));
+      cornerTopLeft.push_back(grid.at(I).at(J));
     }
   }
-  double cornerComplexity = compressPNG(corner, cornerWidth);
+  for(int I = x - cornerWidth; I < x; I++){
+    for(int J = y - cornerWidth; J < y; J++){
+      cornerBottomRight.push_back(grid.at(I).at(J));
+    }
+  }
+
+  double cornerTopLeftComplexity = compressPNG(cornerTopLeft, cornerWidth);
+  double cornerBottomRightComplexity = compressPNG(cornerBottomRight, cornerWidth);
+  pair<int, int> cornerComplexity;
+  cornerComplexity.first = cornerTopLeftComplexity;
+  cornerComplexity.second = cornerBottomRightComplexity;
   return(cornerComplexity);
 }
 
