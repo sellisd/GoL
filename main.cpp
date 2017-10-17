@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
 
 /*
 command line parameters:
-side model replicates Tmax by
+side model replicates Tmax by logLevel
 
 Options
 0:     Gradient
@@ -33,16 +33,18 @@ Options
   int replicates;
   int Tmax;
   int by;
+  int logLevel;
   const char* wfileS = "window.dat";
   const char* vfileS = "vector.dat";
-  if(argc==8){
+  if(argc==9){
     x          = atoi(argv[1]); // side
     model      = atoi(argv[2]);
     replicates = atoi(argv[3]);
     Tmax       = atoi(argv[4]);
     by         = atoi(argv[5]);
-    wfileS     = argv[6];
-    vfileS     = argv[7];
+    logLevel   = atoi(argv[6]);
+    wfileS     = argv[7];
+    vfileS     = argv[8];
   }else{
     cerr<<"command line parameters:"<<endl;
     cerr<<"side model replicates Tmax by woutFileName voutFileName"<<endl;
@@ -84,29 +86,23 @@ Options
     tables.printV(grid, vout);
     break;
     }
-/*    case 1:{         // HPP Lattice Gass
-      lg he(x);
-      he.setIgnoreCollisions(true);
-      g.fillSquare(r, x/2, squareFillingProb);
-      g.run(Tmax, r, wout, vout, entropyFunctions, by);
-      //he.initRegion(r,squareSide,squareFillingProb);
-      //he.run(Tmax, wout, vout, entropyFunctions, by);
-      break;
-    }*/
     case 2:{         // Game of Life
       gameOfLife g(x);
+      g.setLogLevel(logLevel);
       g.fillSquare(r, squareSide, squareFillingProb);
       g.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;
     }
     case 3:{        // interacting coffee automaton
       ca cappuccino(x, true);
+      cappuccino.setLogLevel(logLevel);
       cappuccino.fillSquare(r, squareSide, squareFillingProb);
       cappuccino.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;
     }
     case 4:{        // non-interacting coffee automaton
       ca late(x, false);
+      late.setLogLevel(logLevel);
       late.fillSquare(r, squareSide, squareFillingProb);
       late.run(Tmax, r, wout, vout, entropyFunctions, by);
       break;

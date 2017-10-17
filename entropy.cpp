@@ -67,16 +67,19 @@ void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, 
     double H = this->infEntropy(histogram);
     es.push_back(H);
   }
+}
+
+double entropy::cornerComplexity(vector<vector<int> > & grid, int cornerWidth = 8){
+  //Calculate complexity of top left square corner with width w
   //calculate K1 for the top left corner of width = 8
   vector<int> corner;
-  int cornerWidth = 8;
-  for(int I = 0; I < w; I++){
-    for(int J = 0; J < w; J++){
+  for(int I = 0; I < cornerWidth; I++){
+    for(int J = 0; J < cornerWidth; J++){
       corner.push_back(grid.at(I).at(J));
     }
   }
-  double cK = compressPNG(corner, cornerWidth);
-  cout<<t<<"\t"<<cK<<endl;
+  double cornerComplexity = compressPNG(corner, cornerWidth);
+  return(cornerComplexity);
 }
 
 void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector<int> > & grid){
