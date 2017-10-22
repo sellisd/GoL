@@ -69,6 +69,14 @@ void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, 
   }
 }
 
+void extractSubGrid(vector<vector<int> > & grid, vector<int> subgrid, int width, int x, int y){
+  for( int I = x; I < x + width; I++){
+    for(int J = y; J < y + width; J++){
+      subgrid.push_back(grid.at(I).at(J));
+    }
+  }
+}
+
 pair<double, double> entropy::cornerComplexity(vector<vector<int> > & grid, int cornerWidth = 8){
   //Calculate complexity of top left square corner with width w
   //calculate K1 for the top left corner of width = 8
@@ -79,8 +87,15 @@ pair<double, double> entropy::cornerComplexity(vector<vector<int> > & grid, int 
       cornerTopLeft.push_back(grid.at(I).at(J));
     }
   }
+/*
   for(int I = x - cornerWidth; I < x; I++){
     for(int J = y - cornerWidth; J < y; J++){
+      cornerBottomRight.push_back(grid.at(I).at(J));
+    }
+  }
+  */
+  for( int I = (x-cornerWidth)/2; I <(x-cornerWidth)/2+cornerWidth; I++){
+    for(int J = (y-cornerWidth)/2; J <(y-cornerWidth)/2+cornerWidth; J++){
       cornerBottomRight.push_back(grid.at(I).at(J));
     }
   }

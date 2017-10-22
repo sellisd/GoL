@@ -17,6 +17,17 @@ class entropy{
   double compress(vector<int> & vectorS);
   double compressPNG(vector<int> & vectorS, unsigned int window);
   int    boxCount(vector<int> & vectorS);
+  void extractSubGrid(vector<vector<int> > & grid, vector<int> subgrid, int width, int x, int y)
+    //! Extract a square region of the grid.
+    /**
+    * Extracts a square region of the grid and returns it
+    * as a one dimensional vector.
+    * @param grid the grid of the systm.
+    * @param subgrid the extracted square.
+    * @param width the side of the square to extract.
+    * @param x row index of top-left corner of subgrid
+    * @param y column index of top-left corner of subgrid
+    */
   pair<double,double> cornerComplexity(vector<vector<int> > & grid, int cornerWidth /*= 8*/);
  private:
   int x;
