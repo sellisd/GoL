@@ -68,7 +68,13 @@ void system::step(randomv &r){
 void system::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
   // print and calculate statistics only at by intervals
   if(logLevel == 1){
-    cout<<"Generation"<<"\t"<<"topLeftCornerComplexity"<<"\t"<<"bottomRightCornerComplexity"<<endl;
+    cout<<"window"<<"\t"
+        <<"Stopleft"<<"\t"
+        <<"Scenter"<<"\t"
+        <<"Ktopleft"<<"\t"
+        <<"Kcenter"<<"\t"
+        <<"Htopleft"<<"\t"
+        <<"Hcenter"<<endl;
   }
   for(int t = 0; t <= Tmax; t++){
     if(t % by == 0){
@@ -77,10 +83,9 @@ void system::run(int Tmax, randomv & r, ostream & wout, ostream & vout, entropy 
       vector<double> k1s;
       vector<double> k2s;
       vector<double> es;
-      entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
+//      entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
       if(logLevel == 1){
-        pair<double, double> cornerComplexity = entropyFunctions.cornerComplexity(grid, 8);
-        cout<<t<<"\t"<<cornerComplexity.first<<"\t"<<cornerComplexity.second<<"\t"<<endl;
+        entropyFunctions.subGridPattern(grid);
       }
       for(unsigned int i = 0; i<ws.size(); ++i){
 	       wout<<t<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;

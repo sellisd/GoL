@@ -46,30 +46,7 @@ double entropy::infEntropy(map<int, double> & hist){
   return -H;
 }
 
-void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, vector<double> & k2s, vector<double> & es, vector<vector<int> > & grid){
-  //for Dimension use larger range of window values
-  for(int window = 1; window <= x; window*=2){
-    //  for(int window = 2; window < x; window*=2){
-    ws.push_back(window);
-    vector<int> cg;
-    this->coarseGrain(cg, window, grid);
-    // calculate Dimension
-    int S = this->boxCount(cg);
-    ss.push_back(S);
-    // calculate Complexity
-    double K1 = compressPNG(cg, x/window);
-    k1s.push_back(K1);
-    double K2 = compress(cg);
-    k2s.push_back(K2);
-    // calculate Entropy
-    map<int,double> histogram;
-    this->hist(histogram, cg);
-    double H = this->infEntropy(histogram);
-    es.push_back(H);
-  }
-}
-
-void extractSubGrid(vector<vector<int> > & grid, vector<int> subgrid, int width, int x, int y){
+void entropy::extractSubGrid(vector<vector<int> > & grid, vector<int> & subgrid, int width, int x, int y){
   for( int I = x; I < x + width; I++){
     for(int J = y; J < y + width; J++){
       subgrid.push_back(grid.at(I).at(J));
@@ -77,35 +54,44 @@ void extractSubGrid(vector<vector<int> > & grid, vector<int> subgrid, int width,
   }
 }
 
-pair<double, double> entropy::cornerComplexity(vector<vector<int> > & grid, int cornerWidth = 8){
-  //Calculate complexity of top left square corner with width w
-  //calculate K1 for the top left corner of width = 8
-  vector<int> cornerTopLeft;
-  vector<int> cornerBottomRight;
-  for(int I = 0; I < cornerWidth; I++){
-    for(int J = 0; J < cornerWidth; J++){
-      cornerTopLeft.push_back(grid.at(I).at(J));
-    }
+void entropy::subGridPattern(vector<vector<int> > & grid){
+  for(int window = 1; window <= x; window*=2){
+    //for each window center and top-left subgrid
+    int subGridSide = 8;
+    vector<int> topleft;
+    vector<int> center;
+    extractSubGrid(grid, topleft, subGridSide, 0, 0);
+    extractSubGrid(grid, center, subGridSide, (x - subGridSide)/2, (y - subGridSide)/2);
+    //calculate statistics on subGridSide
+    map<int, double> topleftHistogram;
+    map<int, double> centerHistogram;
+    hist(topleftHistogram, topleft);
+    hist(centerHistogram, center);
+    cout<<window<<"\t";
+    cout<<boxCount(topleft)<<"\t";
+    cout<<boxCount(center)<<"\t";
+    cout<<compressPNG(topleft, subGridSide)<<"\t";
+    cout<<compressPNG(center, subGridSide)<<"\t";
+    cout<<infEntropy(topleftHistogram)<<"\t";
+    cout<<infEntropy(centerHistogram)<<endl;
   }
-/*
-  for(int I = x - cornerWidth; I < x; I++){
-    for(int J = y - cornerWidth; J < y; J++){
-      cornerBottomRight.push_back(grid.at(I).at(J));
-    }
-  }
-  */
-  for( int I = (x-cornerWidth)/2; I <(x-cornerWidth)/2+cornerWidth; I++){
-    for(int J = (y-cornerWidth)/2; J <(y-cornerWidth)/2+cornerWidth; J++){
-      cornerBottomRight.push_back(grid.at(I).at(J));
-    }
-  }
+}
 
-  double cornerTopLeftComplexity = compressPNG(cornerTopLeft, cornerWidth);
-  double cornerBottomRightComplexity = compressPNG(cornerBottomRight, cornerWidth);
-  pair<int, int> cornerComplexity;
-  cornerComplexity.first = cornerTopLeftComplexity;
-  cornerComplexity.second = cornerBottomRightComplexity;
-  return(cornerComplexity);
+void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, vector<double> & k2s, vector<double> & es, vector<vector<int> > & grid){
+  for(int window = 1; window <= x; window*=2){
+    ws.push_back(window);
+    //coarse grain and calculate statistics
+    vector<int> cg;
+    this->coarseGrain(cg, window, grid);
+    int S = this->boxCount(cg);                // calculate Dimension
+    ss.push_back(S);
+    double K1 = compressPNG(cg, x/window);     // calculate Complexity
+    k1s.push_back(K1);
+    map<int,double> histogram;
+    this->hist(histogram, cg);
+    double H = this->infEntropy(histogram);    // calculate Entropy
+    es.push_back(H);
+  }
 }
 
 void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector<int> > & grid){
@@ -154,9 +140,6 @@ double entropy::compress(vector<int> & vectorS){
 }
 
 double entropy::compressPNG(vector<int> & vectorS, unsigned int width){
-  /*
-    use lodepng
-    */
 //    make sure that max value is no more than 254 to be a valid color
   vector<int>::iterator M = max_element(vectorS.begin(),vectorS.end());
   if(M == vectorS.end()){
@@ -202,8 +185,6 @@ double entropy::compressPNG(vector<int> & vectorS, unsigned int width){
 }
 
 int entropy::boxCount(vector<int> & coarseGrained){
-  //calculate box counting dimension (Minkowski-Bouligand)
-  //the input is already coarse grained so we just have to calculate the sum of entries > 0
   int sum = 0;
   for(vector<int>::iterator it = coarseGrained.begin(); it != coarseGrained.end();  ++it){
     if ((*it)>0){
