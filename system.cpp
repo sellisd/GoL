@@ -72,24 +72,23 @@ and for each calculate statistics
 coarsegrain
 and calculate statistics
 */
-
+sout<<"replicate"<<"\t"
+    <<"generation"<<"\t"
+    <<"Ktl"<<"\t"
+    <<"Kce"<<"\t"
+    <<"Kbr"<<"\t"
+    <<"Htl"<<"\t"
+    <<"Hce"<<"\t"
+    <<"Hbr"<<"\t"
+    <<"Dtl"<<"\t"
+    <<"Dce"<<"\t"
+    <<"Dbr"<<endl;
+wout<<"replicate"<<"\t"
+    <<"generation"<<"\t"
+    <<"window"<<"\t"
+    <<"K"<<"\t"
+    <<"H"<<endl;
 for(int t = 0; t <= Tmax; t++){
-  sout<<"replicate"<<"\t"
-      <<"generation"<<"\t"
-      <<"Ktl"<<"\t"
-      <<"Kce"<<"\t"
-      <<"Kbr"<<"\t"
-      <<"Htl"<<"\t"
-      <<"Hce"<<"\t"
-      <<"Hbr"<<"\t"
-      <<"Dtl"<<"\t"
-      <<"Dce"<<"\t"
-      <<"Dbr"<<endl;
-  wout<<"replicate"<<"\t"
-      <<"generation"<<"\t"
-      <<"window"<<"\t"
-      <<"K"<<"\t"
-      <<"H"<<endl;
   if(t % by == 0){
     //statistics //printW
     vector<double> topleftStats;
@@ -116,8 +115,8 @@ for(int t = 0; t <= Tmax; t++){
       wout<<endl;
     }
     printV(t, vout);
-    step(r);
   }
+  step(r);
 }
 /*
 if(logLevel == 1){

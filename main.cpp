@@ -37,7 +37,7 @@ Options
   const char* sfileS = "statistics.dat";
   const char* wfileS = "window.dat";
   const char* vfileS = "vector.dat";
-  if(argc==9){
+  if(argc==10){
     x          = atoi(argv[1]); // side
     model      = atoi(argv[2]);
     replicates = atoi(argv[3]);

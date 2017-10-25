@@ -97,7 +97,7 @@ double entropy::density(vector<int> & subGrid){
       occupiedCells++;
     }
   }
-  return(occupiedCells/subGrid.size());
+  return(occupiedCells/double(subGrid.size()));
 }
 
 void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector<int> > & grid){
