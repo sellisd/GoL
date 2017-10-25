@@ -66,91 +66,54 @@ void system::step(randomv &r){
 }
 
 void system::run(int replicateID, int Tmax, randomv & r, ostream & sout, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
-/*
-extractsubgrids 3
-and for each calculate statistics
-coarsegrain
-and calculate statistics
-*/
-sout<<"replicate"<<"\t"
-    <<"generation"<<"\t"
-    <<"Ktl"<<"\t"
-    <<"Kce"<<"\t"
-    <<"Kbr"<<"\t"
-    <<"Htl"<<"\t"
-    <<"Hce"<<"\t"
-    <<"Hbr"<<"\t"
-    <<"Dtl"<<"\t"
-    <<"Dce"<<"\t"
-    <<"Dbr"<<endl;
-wout<<"replicate"<<"\t"
-    <<"generation"<<"\t"
-    <<"window"<<"\t"
-    <<"K"<<"\t"
-    <<"H"<<endl;
-for(int t = 0; t <= Tmax; t++){
-  if(t % by == 0){
-    //statistics //printW
-    vector<double> topleftStats;
-    vector<double> centerStats;
-    vector<double> bottomrightStats;
-    map<int, vector<double> > cgStats;
-    entropyFunctions.subGridStats(grid, topleftStats, centerStats, bottomrightStats);
-    entropyFunctions.coarseGrainedStats(grid, cgStats);
-    sout<<replicateID<<"\t"
-        <<t<<"\t";
-    for(int i = 0; i < 3; i++){
-      sout<<topleftStats[i]<<"\t"
-          <<centerStats[i]<<"\t"
-          <<bottomrightStats[i]<<"\t";
-    }
-    sout<<endl;
-    for(map<int, vector<double> >::iterator it = cgStats.begin(); it != cgStats.end(); it++){
-      wout<<replicateID<<"\t"
-          <<t<<"\t"
-          <<(*it).first<<"\t"; //window
-      for(vector<double>::iterator jt = (*it).second.begin(); jt != (*it).second.end(); jt++){
-          wout<<(*jt)<<"\t";
-      }
-      wout<<endl;
-    }
-    printV(t, vout);
-  }
-  step(r);
-}
-/*
-if(logLevel == 1){
-    cout<<"time"<<"\t"
-        <<"Stopleft"<<"\t"
-        <<"Scenter"<<"\t"
-        <<"Ktopleft"<<"\t"
-        <<"Kcenter"<<"\t"
-        <<"Htopleft"<<"\t"
-        <<"Hcenter"<<"\t"
-        <<"density"<<endl;
+  if(replicateID == 0){
+    sout<<"replicate"<<"\t"
+        <<"generation"<<"\t"
+        <<"Ktl"<<"\t"
+        <<"Kce"<<"\t"
+        <<"Kbr"<<"\t"
+        <<"Htl"<<"\t"
+        <<"Hce"<<"\t"
+        <<"Hbr"<<"\t"
+        <<"Dtl"<<"\t"
+        <<"Dce"<<"\t"
+        <<"Dbr"<<endl;
+    wout<<"replicate"<<"\t"
+        <<"generation"<<"\t"
+        <<"window"<<"\t"
+        <<"K"<<"\t"
+        <<"H"<<endl;
   }
   for(int t = 0; t <= Tmax; t++){
     if(t % by == 0){
-      vector<int> ws;
-      vector<int> ss;
-      vector<double> k1s;
-      vector<double> k2s;
-      vector<double> es;
-      cout<<t<<"\t";
-      entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
-      if(logLevel == 1){
-        cout<<t<<"\t";
-  //      entropyFunctions.subGridPattern(grid);
+      //statistics //printW
+      vector<double> topleftStats;
+      vector<double> centerStats;
+      vector<double> bottomrightStats;
+      map<int, vector<double> > cgStats;
+      entropyFunctions.subGridStats(grid, topleftStats, centerStats, bottomrightStats);
+      entropyFunctions.coarseGrainedStats(grid, cgStats);
+      sout<<replicateID<<"\t"
+          <<t<<"\t";
+      for(int i = 0; i < 3; i++){
+        sout<<topleftStats[i]<<"\t"
+            <<centerStats[i]<<"\t"
+            <<bottomrightStats[i]<<"\t";
       }
-      cout<<"LL"<<t<<endl;
-      for(unsigned int i = 0; i<ws.size(); ++i){
-	       wout<<t<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+      sout<<endl;
+      for(map<int, vector<double> >::iterator it = cgStats.begin(); it != cgStats.end(); it++){
+        wout<<replicateID<<"\t"
+            <<t<<"\t"
+            <<(*it).first<<"\t"; //window
+        for(vector<double>::iterator jt = (*it).second.begin(); jt != (*it).second.end(); jt++){
+            wout<<(*jt)<<"\t";
+        }
+        wout<<endl;
       }
       printV(t, vout);
     }
     step(r);
   }
-  */
 }
 
 void system::printV(int t, ostream & vout){

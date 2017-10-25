@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
 
 /*
 command line parameters:
-side model replicates Tmax by logLevel
+side model replicates Tmax by
 
 Options
 0:     Gradient
@@ -33,20 +33,18 @@ Options
   int replicates;
   int Tmax;
   int by;
-  int logLevel;
   const char* sfileS = "statistics.dat";
   const char* wfileS = "window.dat";
   const char* vfileS = "vector.dat";
-  if(argc==10){
+  if(argc == 9){
     x          = atoi(argv[1]); // side
     model      = atoi(argv[2]);
     replicates = atoi(argv[3]);
     Tmax       = atoi(argv[4]);
     by         = atoi(argv[5]);
-    logLevel   = atoi(argv[6]);
-    sfileS     = argv[7];
-    wfileS     = argv[8];
-    vfileS     = argv[9];
+    sfileS     = argv[6];
+    wfileS     = argv[7];
+    vfileS     = argv[8];
   }else{
     cerr<<"command line parameters:"<<endl;
     cerr<<"side model replicates Tmax by soutFileName woutFileName voutFileName"<<endl;
@@ -95,21 +93,18 @@ Options
     }
     case 2:{         // Game of Life
       gameOfLife g(x);
-      g.setLogLevel(logLevel);
       g.fillSquare(r, squareSide, squareFillingProb);
       g.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
       break;
     }
     case 3:{        // interacting coffee automaton
       ca cappuccino(x, true);
-      cappuccino.setLogLevel(logLevel);
       cappuccino.fillSquare(r, squareSide, squareFillingProb);
       cappuccino.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
       break;
     }
     case 4:{        // non-interacting coffee automaton
       ca late(x, false);
-      late.setLogLevel(logLevel);
       late.fillSquare(r, squareSide, squareFillingProb);
       late.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
       break;

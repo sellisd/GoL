@@ -14,8 +14,6 @@ class system{
 public:
   system(void);
   system(int side);
-  int getLogLevel(void) {return logLevel; }
-  void setLogLevel(int a){ logLevel = a; }
   int  getSide(void) { return side; }
   void setSide(int a) { side = a; }
   void set(int i, int j, int value);
@@ -50,7 +48,6 @@ public:
   virtual int randomState(); //! Return a random non-zero state of the cell
  private:
   int side;
-  int logLevel;
   vector<vector<int> > grid; //! The world grid
   int generation; // generation or cycle of time evolution
 };
