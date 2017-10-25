@@ -34,6 +34,7 @@ Options
   int Tmax;
   int by;
   int logLevel;
+  const char* sfileS = "statistics.dat";
   const char* wfileS = "window.dat";
   const char* vfileS = "vector.dat";
   if(argc==9){
@@ -43,25 +44,30 @@ Options
     Tmax       = atoi(argv[4]);
     by         = atoi(argv[5]);
     logLevel   = atoi(argv[6]);
-    wfileS     = argv[7];
-    vfileS     = argv[8];
+    sfileS     = argv[7];
+    wfileS     = argv[8];
+    vfileS     = argv[9];
   }else{
     cerr<<"command line parameters:"<<endl;
-    cerr<<"side model replicates Tmax by woutFileName voutFileName"<<endl;
+    cerr<<"side model replicates Tmax by soutFileName woutFileName voutFileName"<<endl;
     exit(1);
   }
   // Initial state variables
   double squareFillingProb = 0.9;
   int squareSide = x/2;
   entropy entropyFunctions(x, x);
+  ofstream sout;
   ofstream wout;
   ofstream vout;
+  sout.open (sfileS, std::ofstream::out);
   wout.open (wfileS, std::ofstream::out);
   vout.open (vfileS, std::ofstream::out);
   randomv r;
   for (int replicate = 0; replicate < replicates; replicate++){
   switch(model){
-  case 0:{          // Smooth gradient
+  case 0:{
+/*
+         // Smooth gradient
     //initialize grid
     vector<vector<int> > grid;
     for (int i = 0; i < x; i++){
@@ -84,30 +90,32 @@ Options
       wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
     }
     tables.printV(grid, vout);
+    */
     break;
     }
     case 2:{         // Game of Life
       gameOfLife g(x);
       g.setLogLevel(logLevel);
       g.fillSquare(r, squareSide, squareFillingProb);
-      g.run(Tmax, r, wout, vout, entropyFunctions, by);
+      g.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
       break;
     }
     case 3:{        // interacting coffee automaton
       ca cappuccino(x, true);
       cappuccino.setLogLevel(logLevel);
       cappuccino.fillSquare(r, squareSide, squareFillingProb);
-      cappuccino.run(Tmax, r, wout, vout, entropyFunctions, by);
+      cappuccino.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
       break;
     }
     case 4:{        // non-interacting coffee automaton
       ca late(x, false);
       late.setLogLevel(logLevel);
       late.fillSquare(r, squareSide, squareFillingProb);
-      late.run(Tmax, r, wout, vout, entropyFunctions, by);
+      late.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
       break;
     }
     case 5:{         // Sierinski's carpet
+    /*
       //initialize grid
       vector<vector<int> > grid;
       for (int i = 0; i < x; i++){
@@ -130,8 +138,11 @@ Options
       	wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       tables.printV(grid, vout);
+      */
       break;
-    }case 6:{         // Square
+    }case 6:{
+        // Square
+        /*
       vector<vector<int> > grid;
       for (int i = 0; i < x; i++){
         vector<int> row;
@@ -152,6 +163,7 @@ Options
         wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
       }
       tables.printV(grid, vout);
+      */
       break;
     }default:
       exit(1);

@@ -37,9 +37,9 @@ void entropy::hist(map<int,double> & hist, vector<int> & vectorS){
  }
 }
 
-double entropy::infEntropy(map<int, double> & hist){
+double entropy::infEntropy(map<int, double> & symbolHistogram){
   double H = 0;
-  for(map<int,double>::iterator it = hist.begin(); it != hist.end(); ++it){
+  for(map<int,double>::iterator it = symbolHistogram.begin(); it != symbolHistogram.end(); ++it){
     double p = (*it).second;
     H += p*log2(p);
   }
@@ -54,49 +54,53 @@ void entropy::extractSubGrid(vector<vector<int> > & grid, vector<int> & subgrid,
   }
 }
 
-void entropy::subGridPattern(vector<vector<int> > & grid){
+void entropy::statistics(vector<int> & subGrid, int subGridSide, vector<double> &results){
+  map<int, double> symbolHistogram;
+  hist(symbolHistogram, subGrid);
+  //cout<<boxCount(subGrid)<<"\t"; this should be done for multiple windows
+  results.push_back(compressPNG(subGrid, subGridSide));
+  results.push_back(infEntropy(symbolHistogram));
+  results.push_back(density(subGrid));
+}
+
+void entropy::subGridStats(vector<vector<int> > &grid, vector<double> & topleftStats, vector<double> & centerStats, vector<double> & bottomrightStats){
+  int subGridSide = 8;
+  vector<int> topleft;
+  vector<int> center;
+  vector<int> bottomright;
+  extractSubGrid(grid, topleft, subGridSide, 0, 0);
+  extractSubGrid(grid, center, subGridSide, (x - subGridSide)/2, (y - subGridSide)/2);
+  extractSubGrid(grid, bottomright, subGridSide, x - subGridSide, y - subGridSide);
+  statistics(topleft, subGridSide, topleftStats);
+  statistics(center, subGridSide, centerStats);
+  statistics(bottomright, subGridSide, bottomrightStats);
+}
+
+void entropy::coarseGrainedStats(vector<vector<int> > &grid, map<int, vector<double> > & cgStats){
   for(int window = 1; window <= x; window*=2){
-    //for each window center and top-left subgrid
-    int subGridSide = 8;
-    vector<int> topleft;
-    vector<int> center;
-    extractSubGrid(grid, topleft, subGridSide, 0, 0);
-    extractSubGrid(grid, center, subGridSide, (x - subGridSide)/2, (y - subGridSide)/2);
-    //calculate statistics on subGridSide
-    map<int, double> topleftHistogram;
-    map<int, double> centerHistogram;
-    hist(topleftHistogram, topleft);
-    hist(centerHistogram, center);
-    cout<<window<<"\t";
-    cout<<boxCount(topleft)<<"\t";
-    cout<<boxCount(center)<<"\t";
-    cout<<compressPNG(topleft, subGridSide)<<"\t";
-    cout<<compressPNG(center, subGridSide)<<"\t";
-    cout<<infEntropy(topleftHistogram)<<"\t";
-    cout<<infEntropy(centerHistogram)<<endl;
+    vector<int> coarseGrainedGrid;
+    vector<double> cgStat;
+    coarseGrain(coarseGrainedGrid, window, grid);
+    map<int, double> symbolHistogram;
+    hist(symbolHistogram, coarseGrainedGrid);
+    //cout<<boxCount(subGrid)<<"\t"; this should be done for multiple windows
+    cgStat.push_back(compressPNG(coarseGrainedGrid, x/window));
+    cgStat.push_back(infEntropy(symbolHistogram));
+    cgStats[window] = cgStat;
   }
 }
 
-void entropy::pattern(vector<int> & ws, vector<int> & ss, vector<double> & k1s, vector<double> & k2s, vector<double> & es, vector<vector<int> > & grid){
-  for(int window = 1; window <= x; window*=2){
-    ws.push_back(window);
-    //coarse grain and calculate statistics
-    vector<int> cg;
-    this->coarseGrain(cg, window, grid);
-    int S = this->boxCount(cg);                // calculate Dimension
-    ss.push_back(S);
-    double K1 = compressPNG(cg, x/window);     // calculate Complexity
-    k1s.push_back(K1);
-    map<int,double> histogram;
-    this->hist(histogram, cg);
-    double H = this->infEntropy(histogram);    // calculate Entropy
-    es.push_back(H);
+double entropy::density(vector<int> & subGrid){
+  int occupiedCells = 0;
+  for(vector<int>::iterator it = subGrid.begin(); it != subGrid.end(); ++it){
+    if (*it != 0){
+      occupiedCells++;
+    }
   }
+  return(occupiedCells/subGrid.size());
 }
 
 void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector<int> > & grid){
-  // non overlapping windows without error check, x and y should be powers of 2
-  // window is the window size
   for(int I = 0; I < x; I+=window){
     for(int J = 0; J < y; J+=window){
       int sum = 0;
@@ -105,7 +109,7 @@ void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector
       	for(int j = 0; j< window; j++){
           sum+=grid.at(i+I).at(j+J);
           counter++;
-	}
+       	}
       }
       coarseGrained.push_back(sum);
     }
@@ -113,7 +117,6 @@ void entropy::coarseGrain(vector<int> & coarseGrained, int window, vector<vector
 }
 
 double entropy::compress(vector<int> & vectorS){
-  // compress vector (encode as value/copy list, eg 000111002 -> 03130221)
   vector<int> compressed;
   int prev = vectorS.front();
   int counter = 0;

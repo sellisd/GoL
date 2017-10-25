@@ -20,10 +20,30 @@ public:
   void setSide(int a) { side = a; }
   void set(int i, int j, int value);
   int  get(int i, int j);
-  void tick();
+  void tick(); //! Evolve the system by a single step.
   void gridInit(void); //! initialize system world
   void fillSquare(randomv &r, int a, double p);
-  void run(int T,randomv &r, ostream & wout, ostream & vout, entropy & entropyFunctions, int by);
+  //! Fill a square region of the environmnet.
+  /**
+  * Fills with 1s a square subregion of the environmnet.
+  * @param[in]  r       Instance of random number generator class.
+  * @param[in]  window  Side of subregion to be filled in.
+  * @param[in]  p       Probability of filling each cell within subregion.
+  * @return                      Nothing
+  */
+  void run(int replicateID, int Tmax,randomv &r, ostream & sout, ostream & wout, ostream & vout, entropy & entropyFunctions, int by);
+  //! Run the simulation.
+  /**
+  * Performs a simulation run and calculates relevant statistics.
+  * @param[in]  replicateID      Replicate ID of simulation.
+  * @param[in]  Tmax             Run simulations for Tmax steps.
+  * @param[in]  r                Random number generation class.
+  * @param[out] wout             Statistics on three subgrids.
+  * @param[out] wout             Statistics on coarse grained grid.
+  * @param[out] vout             Output stream of the state of the system for each generation.
+  * @param[in]  entropyFunctions Entropy functions instance
+  * @return                      Nothing
+  */
   void printV(int t, ostream & vout);
   void makeGrid(vector<vector<int> > & grid);
   virtual void step(randomv &r);
