@@ -28,68 +28,68 @@ Options
 5:     Sierpinski's Carpet
 6:     square
    */
-  int x;
-  int model;
-  int replicates;
-  int Tmax;
-  int by;
-  const char* sfileS = "statistics.dat";
-  const char* wfileS = "window.dat";
-  const char* vfileS = "vector.dat";
-  if(argc == 9){
-    x          = atoi(argv[1]); // side
-    model      = atoi(argv[2]);
-    replicates = atoi(argv[3]);
-    Tmax       = atoi(argv[4]);
-    by         = atoi(argv[5]);
-    sfileS     = argv[6];
-    wfileS     = argv[7];
-    vfileS     = argv[8];
-  }else{
-    cerr<<"command line parameters:"<<endl;
-    cerr<<"side model replicates Tmax by soutFileName woutFileName voutFileName"<<endl;
-    exit(1);
-  }
-  // Initial state variables
-  double squareFillingProb = 0.9;
-  int squareSide = x/2;
-  entropy entropyFunctions(x, x);
-  ofstream sout;
-  ofstream wout;
-  ofstream vout;
-  sout.open (sfileS, std::ofstream::out);
-  wout.open (wfileS, std::ofstream::out);
-  vout.open (vfileS, std::ofstream::out);
-  randomv r;
-  for (int replicate = 0; replicate < replicates; replicate++){
+int x;
+int model;
+int replicates;
+int Tmax;
+int by;
+const char* sfileS = "statistics.dat";
+const char* wfileS = "window.dat";
+const char* vfileS = "vector.dat";
+if(argc == 9){
+  x          = atoi(argv[1]); // side
+  model      = atoi(argv[2]);
+  replicates = atoi(argv[3]);
+  Tmax       = atoi(argv[4]);
+  by         = atoi(argv[5]);
+  sfileS     = argv[6];
+  wfileS     = argv[7];
+  vfileS     = argv[8];
+}else{
+  cerr<<"command line parameters:"<<endl;
+  cerr<<"side model replicates Tmax by soutFileName woutFileName voutFileName"<<endl;
+  exit(1);
+}
+// Initial state variables
+double squareFillingProb = 0.9;
+int squareSide = x/2;
+entropy entropyFunctions(x, x);
+ofstream sout;
+ofstream wout;
+ofstream vout;
+sout.open (sfileS, std::ofstream::out);
+wout.open (wfileS, std::ofstream::out);
+vout.open (vfileS, std::ofstream::out);
+randomv r;
+for (int replicate = 0; replicate < replicates; replicate++){
   switch(model){
-  case 0:{
-/*
-         // Smooth gradient
-    //initialize grid
-    vector<vector<int> > grid;
-    for (int i = 0; i < x; i++){
-      vector<int> row;
-	    for(int j = 0; j<x; j++){
-        row.push_back(0);
-	    }
-	    grid.push_back(row);
-    }
-    // initialize static library
-    generateStatic tables(x);
-    tables.gradient(grid,r);
-    vector<int> ws;
-    vector<int> ss;
-    vector<double> k1s;
-    vector<double> k2s;
-    vector<double> es;
-    entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
-    for(unsigned int i = 0; i<ws.size(); ++i){
-      wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
-    }
-    tables.printV(grid, vout);
-    */
-    break;
+    case 0:{
+  /*
+           // Smooth gradient
+      //initialize grid
+      vector<vector<int> > grid;
+      for (int i = 0; i < x; i++){
+        vector<int> row;
+  	    for(int j = 0; j<x; j++){
+          row.push_back(0);
+  	    }
+  	    grid.push_back(row);
+      }
+      // initialize static library
+      generateStatic tables(x);
+      tables.gradient(grid,r);
+      vector<int> ws;
+      vector<int> ss;
+      vector<double> k1s;
+      vector<double> k2s;
+      vector<double> es;
+      entropyFunctions.pattern(ws,ss,k1s,k2s,es, grid);
+      for(unsigned int i = 0; i<ws.size(); ++i){
+        wout<<0<<' '<<ws.at(i)<<' '<<ss.at(i)<<' '<<k1s.at(i)<<' '<<k2s.at(i)<<' '<<es.at(i)<<endl;
+      }
+      tables.printV(grid, vout);
+      */
+      break;
     }
     case 2:{         // Game of Life
       gameOfLife g(x);

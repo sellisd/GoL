@@ -43,8 +43,8 @@ evolutionStats <- function(wdat){
   # calculate statistics at each generation during the evolution of a system
   # INPUT: .w.dat files
   # OUTPUT: returns matrices with medians and quantiles for H, K1 and K2
-  generations <- unique(wdat$V1)
-  windows <- unique(wdat$V2)
+  generations <- unique(wdat$generation)
+  windows <- unique(wdat$window)
   mm.H <- matrix(ncol=length(windows),nrow=length(generations))
   ml.H <- matrix(ncol=length(windows),nrow=length(generations))
   mu.H <- matrix(ncol=length(windows),nrow=length(generations))
@@ -58,17 +58,17 @@ evolutionStats <- function(wdat){
   for(g in generations){
     windowCounter <- 1
     for(w in windows){
-      av.H <- wdat[which(wdat$V1==g & wdat$V2==w),6] #, 6 for Entropy
+      av.H <- wdat[which(wdat$generation==g & wdat$window==w),6] #, 6 for Entropy
       qs.H <- quantile(av.H,probs=c(0.1,0.5,0.9),names=FALSE)
       mm.H[generationCounter,windowCounter] <- qs.H[2]
       ml.H[generationCounter,windowCounter] <- qs.H[1]
       mu.H[generationCounter,windowCounter] <- qs.H[3]
-      av.K1 <- wdat[which(wdat$V1==g & wdat$V2==w),4] #, 4 K_PNG
+      av.K1 <- wdat[which(wdat$generation==g & wdat$window==w),4] #, 4 K_PNG
       qs.K1 <- quantile(av.K1,probs=c(0.1,0.5,0.9),names=FALSE)
       mm.K1[generationCounter,windowCounter] <- qs.K1[2]
       ml.K1[generationCounter,windowCounter] <- qs.K1[1]
       mu.K1[generationCounter,windowCounter] <- qs.K1[3]
-      av.K2 <- wdat[which(wdat$V1==g & wdat$V2==w),5] #, 5 for K_RLE
+      av.K2 <- wdat[which(wdat$generation==g & wdat$window==w),5] #, 5 for K_RLE
       qs.K2 <- quantile(av.K2,probs=c(0.1,0.5,0.9),names=FALSE)
       mm.K2[generationCounter,windowCounter] <- qs.K2[2]
       ml.K2[generationCounter,windowCounter] <- qs.K2[1]
@@ -99,10 +99,10 @@ evolutionStats <- function(wdat){
 #' @export
 #'
 #' @examples
-plotScalc <- function(wout, generation = 0){
+plotScalc <- function(wout, g = 0){
   # plot S for static structures (0 generations)
-  N <- log(wout$V3[wout$V1 == generation],base=10)
-  w <- log(1/wout$V2[wout$V1 == generation],base=10)
+  N <- log(wout$S[wout$generation == g],base=10)
+  w <- log(1/wout$window[wout$generation == g],base=10)
   Lfit <- goodFit(w,N,minXpoints = 4, r2 = 0.9)
   plot(w,N,xlab="log2(1/w)", ylab="log2(N(S))",pch=19)
   m <- min(w[Lfit$index])
@@ -124,16 +124,16 @@ plotScalc <- function(wout, generation = 0){
 #'
 #' @examples
 plotSTcalc <- function(wout){
-  generations <- unique(wout$V1)
-  windows <- unique(wout$V2)
+  generations <- unique(wout$generation)
+  windows <- unique(wout$window)
   generationCounter <- 1
   D <- vector()
   DSE <- vector()
   Dr2 <- vector()
   counter <- 1
   for(g in generations){
-    N <- log(wout$V3[wout$V1==g],base=10)
-    w <- log(1/wout$V2[wout$V1==g],base=10)
+    N <- log(wout$S[wout$generation==g],base=10)
+    w <- log(1/wout$window[wout$generation==g],base=10)
     Lfit <- goodFit(w,N,minXpoints = 4, r2 = 0.9)
     D[counter]   <- Lfit$slope
     DSE[counter] <- Lfit$se

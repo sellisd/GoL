@@ -82,7 +82,8 @@ void system::run(int replicateID, int Tmax, randomv & r, ostream & sout, ostream
         <<"generation"<<"\t"
         <<"window"<<"\t"
         <<"K"<<"\t"
-        <<"H"<<endl;
+        <<"H"<<"\t"
+        <<"S"<<endl;
   }
   for(int t = 0; t <= Tmax; t++){
     if(t % by == 0){
@@ -98,19 +99,28 @@ void system::run(int replicateID, int Tmax, randomv & r, ostream & sout, ostream
       for(int i = 0; i < 3; i++){
         sout<<topleftStats[i]<<"\t"
             <<centerStats[i]<<"\t"
-            <<bottomrightStats[i]<<"\t";
+            <<bottomrightStats[i];
+            if(i!=2){
+              sout<<"\t";
+            }
       }
       sout<<endl;
       for(map<int, vector<double> >::iterator it = cgStats.begin(); it != cgStats.end(); it++){
         wout<<replicateID<<"\t"
             <<t<<"\t"
             <<(*it).first<<"\t"; //window
+        vector<double>::iterator oneBeforeLast = prev((*it).second.end());
         for(vector<double>::iterator jt = (*it).second.begin(); jt != (*it).second.end(); jt++){
-            wout<<(*jt)<<"\t";
+            wout<<(*jt);
+            if(jt != oneBeforeLast){ //if it is the last itteration
+              wout<<"\t";
+            }
         }
         wout<<endl;
       }
-      printV(t, vout);
+      if(t % (10 * by) == 0){
+        printV(t, vout);
+      }
     }
     step(r);
   }

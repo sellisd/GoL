@@ -83,9 +83,9 @@ void entropy::coarseGrainedStats(vector<vector<int> > &grid, map<int, vector<dou
     coarseGrain(coarseGrainedGrid, window, grid);
     map<int, double> symbolHistogram;
     hist(symbolHistogram, coarseGrainedGrid);
-    //cout<<boxCount(subGrid)<<"\t"; this should be done for multiple windows
     cgStat.push_back(compressPNG(coarseGrainedGrid, x/window));
     cgStat.push_back(infEntropy(symbolHistogram));
+    cgStat.push_back(boxCount(coarseGrainedGrid));
     cgStats[window] = cgStat;
   }
 }

@@ -103,7 +103,7 @@ class entropy{
   * @return             Nothing
   */
   int    boxCount(vector<int> & vectorS);
-  //! Calculate the box-counting dimension.
+  //! Calculate the box-counting dimension of a coarse grained vector.
   /**
   * Calculate box counting dimension (Minkowski-Bouligand). As the input is
   * already coarse grained we just have to calculate the sum of entries > 0
