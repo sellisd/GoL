@@ -39,6 +39,13 @@ void cani::move(int i, int x2, int y2){
   x.at(i) = x2;
   y.at(i) = y2;
 }
+/**
+* Create a vector of particles
+* @param[in] i   Particle index (order in vector).
+* @param[in] x2  x-axis coordinate of new particle location.
+* @param[in] y2  y-axis coordinate of new particle location.
+* @return              Nothing
+*/
 
 void cani::makeGrid(vector<vector<int> > & grid){
   // Create vector of size side*side filled with 0

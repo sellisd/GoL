@@ -32,22 +32,26 @@ int x;
 int model;
 int replicates;
 int Tmax;
-int by;
+int byS;
+int byW;
+int byV;
 const char* sfileS = "statistics.dat";
 const char* wfileS = "window.dat";
 const char* vfileS = "vector.dat";
-if(argc == 9){
+if(argc == 11){
   x          = atoi(argv[1]); // side
   model      = atoi(argv[2]);
   replicates = atoi(argv[3]);
   Tmax       = atoi(argv[4]);
-  by         = atoi(argv[5]);
-  sfileS     = argv[6];
-  wfileS     = argv[7];
-  vfileS     = argv[8];
+  byS         = atoi(argv[5]);
+  byW         = atoi(argv[6]);
+  byV         = atoi(argv[7]);
+  sfileS     = argv[8];
+  wfileS     = argv[9];
+  vfileS     = argv[10];
 }else{
   cerr<<"command line parameters:"<<endl;
-  cerr<<"side model replicates Tmax by soutFileName woutFileName voutFileName"<<endl;
+  cerr<<"side model replicates Tmax byS byW byV soutFileName woutFileName voutFileName"<<endl;
   exit(1);
 }
 // Initial state variables
@@ -94,19 +98,19 @@ for (int replicate = 0; replicate < replicates; replicate++){
     case 2:{         // Game of Life
       gameOfLife g(x);
       g.fillSquare(r, squareSide, squareFillingProb);
-      g.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
+      g.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, byS, byW, byV);
       break;
     }
     case 3:{        // interacting coffee automaton
-      ca cappuccino(x, true);
-      cappuccino.fillSquare(r, squareSide, squareFillingProb);
-      cappuccino.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
+      ca gasFreeExpansionInteracting(x, true);
+      gasFreeExpansionInteracting.fillSquare(r, squareSide, squareFillingProb);
+      gasFreeExpansionInteracting.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, byS, byW, byV);
       break;
     }
     case 4:{        // non-interacting coffee automaton
-      ca late(x, false);
-      late.fillSquare(r, squareSide, squareFillingProb);
-      late.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, by);
+      ca gasFreeExpansion(x, false);
+      gasFreeExpansion.fillSquare(r, squareSide, squareFillingProb);
+      gasFreeExpansion.run(replicate, Tmax, r, sout, wout, vout, entropyFunctions, byS, byW, byV);
       break;
     }
     case 5:{         // Sierinski's carpet

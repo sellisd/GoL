@@ -9,12 +9,6 @@
 using namespace std;
 
 void ca::step(randomv &r){
-  //- coffee automaton lattice rule is random swap two adjacent particles At each time step, choose 2 horizontally or vertically adjacent squares uniformly at random and swap them if they’re colored differentl
-// pick one random i
-// pick random
-//   if different color swap
-//   else pick another and repeat
-// if non-interacting always swap
   bool success = false;
   while (success != true) {
     int x1 = r.sampleUniformInt(system::getSide());
@@ -48,18 +42,11 @@ void ca::step(randomv &r){
 int ca::swap(int x1,int y1, int x2, int y2){
   int a = system::get(x1,y1);
   int b = system::get(x2,y2);
-  if(interacting == false){//if non interacting always swap
+  if(a != b){
     system::set(x1,y1,b);
     system::set(x2,y2,a);
     return 1;
   }else{
-    //else check
-    if(a != b){
-      system::set(x1,y1,b);
-      system::set(x2,y2,a);
-      return 1;
-    }else{
-      return 0;
-    }
+    return 0;
   }
 }

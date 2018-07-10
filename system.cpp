@@ -65,62 +65,64 @@ void system::step(randomv &r){
   tick();
 }
 
-void system::run(int replicateID, int Tmax, randomv & r, ostream & sout, ostream & wout, ostream & vout, entropy & entropyFunctions, int by){
+void system::run(int replicateID, int Tmax, randomv & r, ostream & sout, ostream & wout, ostream & vout, entropy & entropyFunctions, int byS, int byW, int byV){
   if(replicateID == 0){
     sout<<"replicate"<<"\t"
-        <<"generation"<<"\t"
-        <<"Ktl"<<"\t"
-        <<"Kce"<<"\t"
-        <<"Kbr"<<"\t"
-        <<"Htl"<<"\t"
-        <<"Hce"<<"\t"
-        <<"Hbr"<<"\t"
-        <<"Dtl"<<"\t"
-        <<"Dce"<<"\t"
-        <<"Dbr"<<endl;
+    <<"generation"<<"\t"
+    <<"Ktl"<<"\t"
+    <<"Kce"<<"\t"
+    <<"Kbr"<<"\t"
+    <<"Htl"<<"\t"
+    <<"Hce"<<"\t"
+    <<"Hbr"<<"\t"
+    <<"Dtl"<<"\t"
+    <<"Dce"<<"\t"
+    <<"Dbr"<<endl;
     wout<<"replicate"<<"\t"
-        <<"generation"<<"\t"
-        <<"window"<<"\t"
-        <<"K"<<"\t"
-        <<"H"<<"\t"
-        <<"S"<<endl;
+    <<"generation"<<"\t"
+    <<"window"<<"\t"
+    <<"K"<<"\t"
+    <<"H"<<"\t"
+    <<"S"<<endl;
   }
   for(int t = 0; t <= Tmax; t++){
-    if(t % by == 0){
+    if(t % byS == 0){
       //statistics //printW
       vector<double> topleftStats;
       vector<double> centerStats;
       vector<double> bottomrightStats;
-      map<int, vector<double> > cgStats;
       entropyFunctions.subGridStats(grid, topleftStats, centerStats, bottomrightStats);
-      entropyFunctions.coarseGrainedStats(grid, cgStats);
       sout<<replicateID<<"\t"
-          <<t<<"\t";
+      <<t<<"\t";
       for(int i = 0; i < 3; i++){
         sout<<topleftStats[i]<<"\t"
-            <<centerStats[i]<<"\t"
-            <<bottomrightStats[i];
-            if(i!=2){
-              sout<<"\t";
-            }
+        <<centerStats[i]<<"\t"
+        <<bottomrightStats[i];
+        if(i!=2){
+          sout<<"\t";
+        }
       }
       sout<<endl;
+    }
+    if(t % byW == 0){
+      map<int, vector<double> > cgStats;
+      entropyFunctions.coarseGrainedStats(grid, cgStats);
       for(map<int, vector<double> >::iterator it = cgStats.begin(); it != cgStats.end(); it++){
         wout<<replicateID<<"\t"
-            <<t<<"\t"
-            <<(*it).first<<"\t"; //window
+        <<t<<"\t"
+        <<(*it).first<<"\t"; //window
         vector<double>::iterator oneBeforeLast = prev((*it).second.end());
         for(vector<double>::iterator jt = (*it).second.begin(); jt != (*it).second.end(); jt++){
-            wout<<(*jt);
-            if(jt != oneBeforeLast){ //if it is the last itteration
-              wout<<"\t";
-            }
+          wout<<(*jt);
+          if(jt != oneBeforeLast){ //if it is the last itteration
+            wout<<"\t";
+          }
         }
         wout<<endl;
       }
-      if(t % (10 * by) == 0){
-        printV(t, vout);
-      }
+    }
+    if(t % byV == 0){
+      printV(t, vout);
     }
     step(r);
   }
